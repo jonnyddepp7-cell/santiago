@@ -17,210 +17,401 @@
     .layout { display: flex; min-height: 100vh; }
     aside {
       width: 245px;
+      flex-shrink: 0;
       background: #111b36;
       color: white;
-      padding: 28px 18px;
+      padding: 26px 18px;
     }
     .brand { font-size: 24px; font-weight: 800; letter-spacing: 2px; }
-    .admin-label { color: #b8c2df; font-size: 12px; margin: 8px 0 35px; }
+    .admin-label { color: #b8c2df; font-size: 12px; margin: 8px 0 30px; }
     nav a {
       display: block;
       color: #dce3f7;
       text-decoration: none;
-      padding: 14px;
-      border-radius: 10px;
-      margin: 7px 0;
+      padding: 13px;
+      border-radius: 9px;
+      margin: 6px 0;
     }
-    nav a.active, nav a:hover { background: #29385e; color: white; }
-    main { flex: 1; padding: 32px; min-width: 0; }
+    nav a:hover, nav a.active { background: #29385e; color: white; }
+    main { flex: 1; min-width: 0; padding: 30px; }
     header {
       display: flex;
       justify-content: space-between;
       align-items: center;
       gap: 15px;
       flex-wrap: wrap;
-      margin-bottom: 30px;
+      margin-bottom: 28px;
     }
     h1 { margin: 0 0 8px; font-size: 27px; }
-    .muted { color: #78839d; font-size: 14px; }
+    h2 { font-size: 18px; margin: 0 0 18px; }
+    .muted { color: #78839d; font-size: 13px; }
+    button, select {
+      border: 1px solid #dfe3ed;
+      border-radius: 8px;
+      padding: 10px 13px;
+      background: white;
+      color: #17213b;
+    }
     button {
-      border: 0;
-      border-radius: 9px;
       background: #29385e;
       color: white;
-      padding: 12px 18px;
+      border: 0;
       cursor: pointer;
     }
+    button:disabled { opacity: .5; cursor: not-allowed; }
     .cards {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
-      gap: 18px;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 16px;
     }
     .card, .panel {
       background: white;
       border: 1px solid #e8eaf1;
-      border-radius: 15px;
-      padding: 22px;
+      border-radius: 14px;
+      padding: 21px;
     }
-    .card h3 { font-size: 14px; color: #78839d; margin: 0 0 15px; }
-    .value { font-size: 25px; font-weight: 700; }
-    .panel { margin-top: 24px; }
-    .panel h2 { font-size: 18px; margin-top: 0; }
-    .status {
-      display: inline-block;
-      background: #fff2d8;
-      color: #91620b;
-      padding: 6px 10px;
-      border-radius: 20px;
-      font-size: 12px;
+    .card h3 { font-size: 13px; color: #78839d; margin: 0 0 13px; }
+    .value { font-size: 27px; font-weight: 700; }
+    .panel { margin-top: 23px; overflow: hidden; }
+    .table-wrap { overflow-x: auto; }
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      min-width: 620px;
+      font-size: 13px;
     }
-    #message { padding: 15px; color: #78839d; }
-    @media(max-width:700px) {
+    th, td {
+      text-align: left;
+      padding: 13px 11px;
+      border-bottom: 1px solid #edf0f5;
+    }
+    th { color: #78839d; font-weight: 600; }
+    .message {
+      padding: 13px;
+      border-radius: 9px;
+      background: #f0f2f8;
+      color: #46516a;
+      margin: 15px 0;
+      font-size: 13px;
+    }
+    .hidden { display: none !important; }
+    #accessMessage {
+      max-width: 500px;
+      margin: 100px auto;
+      padding: 25px;
+      text-align: center;
+    }
+    @media(max-width: 750px) {
       .layout { display: block; }
       aside { width: 100%; }
       nav { display: flex; overflow-x: auto; }
       nav a { white-space: nowrap; }
-      main { padding: 20px; }
+      main { padding: 18px; }
     }
   </style>
 </head>
 <body>
-  <div id="message">Checking administrator access...</div>
 
-  <div class="layout" id="dashboard" hidden>
-    <aside>
-      <div class="brand">SANTIAGO</div>
-      <div class="admin-label">OWNER CONTROL PANEL</div>
-      <nav>
-        <a class="active" href="admin.html">Dashboard</a>
-        <a href="#users">Customers</a>
-        <a href="#orders">Orders</a>
-        <a href="#wallet">Wallet</a>
-        <a href="#numbers">Virtual Numbers</a>
-        <a href="#boosting">Social Boosting</a>
-        <a href="#settings">Settings</a>
-      </nav>
-    </aside>
+<div id="accessMessage" class="panel">Checking administrator access...</div>
 
-    <main>
-      <header>
-        <div>
-          <h1>Admin Dashboard</h1>
-          <div class="muted" id="adminEmail">Owner account</div>
-        </div>
-        <button id="logoutBtn">Log out</button>
-      </header>
+<div class="layout hidden" id="dashboard">
+  <aside>
+    <div class="brand">SANTIAGO</div>
+    <div class="admin-label">OWNER CONTROL PANEL</div>
+    <nav>
+      <a class="active" href="#overview">Dashboard</a>
+      <a href="#customers">Customers</a>
+      <a href="#orders">Orders</a>
+      <a href="#wallet">Wallet</a>
+    </nav>
+  </aside>
 
-      <div class="cards">
-        <div class="card">
-          <h3>Total Customers</h3>
-          <div class="value">—</div>
-          <span class="muted">Not connected</span>
-        </div>
-        <div class="card">
-          <h3>Total Orders</h3>
-          <div class="value">—</div>
-          <span class="muted">Not connected</span>
-        </div>
-        <div class="card">
-          <h3>Wallet Deposits</h3>
-          <div class="value">—</div>
-          <span class="muted">Not connected</span>
-        </div>
-        <div class="card">
-          <h3>Revenue</h3>
-          <div class="value">—</div>
-          <span class="muted">Not connected</span>
-        </div>
+  <main>
+    <header>
+      <div>
+        <h1>Dashboard Overview</h1>
+        <div class="muted" id="adminEmail">Owner account</div>
       </div>
+      <button id="logoutBtn">Log out</button>
+    </header>
 
-      <section class="panel" id="users">
-        <h2>Customer Management</h2>
-        <p class="muted">Customer records will appear here after we connect the customer database.</p>
-        <span class="status">Coming next</span>
-      </section>
+    <div id="notice" class="message hidden"></div>
 
-      <section class="panel" id="orders">
-        <h2>Order Management</h2>
-        <p class="muted">Review and manage virtual number and social boosting orders.</p>
-        <span class="status">Coming next</span>
-      </section>
+    <section id="overview" class="cards">
+      <div class="card">
+        <h3>Total Customers</h3>
+        <div class="value" id="customerCount">—</div>
+      </div>
+      <div class="card">
+        <h3>Total Orders</h3>
+        <div class="value" id="orderCount">—</div>
+      </div>
+      <div class="card">
+        <h3>Pending Orders</h3>
+        <div class="value" id="pendingCount">—</div>
+      </div>
+      <div class="card">
+        <h3>Revenue</h3>
+        <div class="value">Not connected</div>
+      </div>
+    </section>
 
-      <section class="panel" id="wallet">
-        <h2>Wallet Management</h2>
-        <p class="muted">Deposit verification, withdrawals and transaction history.</p>
-        <span class="status">Coming next</span>
-      </section>
+    <section class="panel" id="customers">
+      <h2>Registered Customers</h2>
+      <div class="muted">Latest customer profiles</div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Email</th>
+              <th>Registration date</th>
+            </tr>
+          </thead>
+          <tbody id="customerRows">
+            <tr><td colspan="2">Loading customers...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
 
-      <section class="panel" id="numbers">
-        <h2>Virtual Number Services</h2>
-        <p class="muted">Manage supported countries, services, prices and provider inventory.</p>
-        <span class="status">Coming next</span>
-      </section>
+    <section class="panel" id="orders">
+      <h2>Order Management</h2>
+      <div class="muted">Review customer orders and update their status.</div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Order ID</th>
+              <th>Customer</th>
+              <th>Type</th>
+              <th>Service</th>
+              <th>Amount</th>
+              <th>Status</th>
+              <th>Update</th>
+            </tr>
+          </thead>
+          <tbody id="orderRows">
+            <tr><td colspan="7">Loading orders...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
 
-      <section class="panel" id="boosting">
-        <h2>Social Media Boosting</h2>
-        <p class="muted">Manage platforms, services, prices and supplier connections.</p>
-        <span class="status">Coming next</span>
-      </section>
+    <section class="panel" id="wallet">
+      <h2>Wallet Management</h2>
+      <p class="muted">
+        Wallet deposits, withdrawals, balances and revenue will be connected
+        after we build the secure wallet and transaction system.
+      </p>
+    </section>
+  </main>
+</div>
 
-      <section class="panel" id="settings">
-        <h2>Platform Settings</h2>
-        <p class="muted">Owner settings and platform configuration.</p>
-        <span class="status">Coming next</span>
-      </section>
-    </main>
-  </div>
+<script>
+  const SUPABASE_URL = "https://anzrwkwyjcdessheviyw.supabase.co";
+  const SUPABASE_KEY = "sb_publishable_txD8O7D0v34s59Z2p-nqaA_6ur0PFFX";
 
-  <script>
-    const SUPABASE_URL = "https://anzrwkwyjcdessheviyw.supabase.co";
-    const SUPABASE_KEY = "sb_publishable_txD8O7D0v34s59Z2p-nqaA_6ur0PFFX";
+  const db = window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+  );
 
-    const supabaseClient = window.supabase.createClient(
-      SUPABASE_URL,
-      SUPABASE_KEY
-    );
+  const accessMessage = document.getElementById("accessMessage");
+  const dashboard = document.getElementById("dashboard");
+  const notice = document.getElementById("notice");
 
-    async function checkAdmin() {
-      const message = document.getElementById("message");
+  function showNotice(message) {
+    notice.textContent = message;
+    notice.classList.remove("hidden");
+  }
 
-      const { data: sessionData, error: sessionError } =
-        await supabaseClient.auth.getSession();
+  function safeText(value) {
+    return String(value ?? "").replace(/[&<>"']/g, character => ({
+      "&": "&amp;",
+      "<": "&lt;",
+      ">": "&gt;",
+      '"': "&quot;",
+      "'": "&#039;"
+    })[character]);
+  }
 
-      const session = sessionData?.session;
+  function formatDate(value) {
+    if (!value) return "—";
+    return new Date(value).toLocaleDateString();
+  }
 
-      if (sessionError || !session) {
-        window.location.replace("auth.html");
-        return;
-      }
+  async function checkAdmin() {
+    const { data: sessionData, error: sessionError } =
+      await db.auth.getSession();
 
-      const { data: adminRecord, error: adminError } =
-        await supabaseClient
-          .from("admin_users")
-          .select("user_id")
-          .eq("user_id", session.user.id)
-          .maybeSingle();
+    const session = sessionData?.session;
 
-      if (adminError || !adminRecord) {
-        message.textContent = "Access denied. This account is not an administrator.";
-        await supabaseClient.auth.signOut();
-        setTimeout(() => window.location.replace("auth.html"), 2000);
-        return;
-      }
-
-      document.getElementById("adminEmail").textContent =
-        session.user.email;
-
-      message.hidden = true;
-      document.getElementById("dashboard").hidden = false;
+    if (sessionError || !session) {
+      window.location.replace("auth.html");
+      return;
     }
 
-    document.getElementById("logoutBtn").addEventListener("click", async () => {
-      await supabaseClient.auth.signOut();
-      window.location.replace("auth.html");
-    });
+    const { data: admin, error: adminError } = await db
+      .from("admin_users")
+      .select("user_id")
+      .eq("user_id", session.user.id)
+      .maybeSingle();
 
-    checkAdmin();
-  </script>
+    if (adminError || !admin) {
+      accessMessage.textContent = "Access denied. This account is not an administrator.";
+      await db.auth.signOut();
+      setTimeout(() => window.location.replace("auth.html"), 2000);
+      return;
+    }
+
+    document.getElementById("adminEmail").textContent =
+      session.user.email || "Owner account";
+
+    accessMessage.classList.add("hidden");
+    dashboard.classList.remove("hidden");
+
+    await loadDashboard();
+  }
+
+  async function loadDashboard() {
+    const [customersResult, ordersResult, pendingResult] =
+      await Promise.all([
+        db.from("profiles").select("id", { count: "exact", head: true }),
+        db.from("orders").select("id", { count: "exact", head: true }),
+        db.from("orders").select("id", { count: "exact", head: true })
+          .eq("status", "pending")
+      ]);
+
+    if (customersResult.error || ordersResult.error || pendingResult.error) {
+      showNotice(
+        "Some dashboard data could not load. Check your Supabase table permissions."
+      );
+    }
+
+    document.getElementById("customerCount").textContent =
+      customersResult.error ? "Error" : customersResult.count ?? 0;
+
+    document.getElementById("orderCount").textContent =
+      ordersResult.error ? "Error" : ordersResult.count ?? 0;
+
+    document.getElementById("pendingCount").textContent =
+      pendingResult.error ? "Error" : pendingResult.count ?? 0;
+
+    await loadCustomers();
+    await loadOrders();
+  }
+
+  async function loadCustomers() {
+    const body = document.getElementById("customerRows");
+
+    const { data, error } = await db
+      .from("profiles")
+      .select("email, created_at")
+      .order("created_at", { ascending: false })
+      .limit(50);
+
+    if (error) {
+      body.innerHTML = "<tr><td colspan='2'>Could not load customers.</td></tr>";
+      return;
+    }
+
+    if (!data || data.length === 0) {
+      body.innerHTML = "<tr><td colspan='2'>No customer profiles found yet.</td></tr>";
+      return;
+    }
+
+    body.innerHTML = data.map(customer => `
+      <tr>
+        <td>${safeText(customer.email)}</td>
+        <td>${safeText(formatDate(customer.created_at))}</td>
+      </tr>
+    `).join("");
+  }
+
+  async function loadOrders() {
+    const body = document.getElementById("orderRows");
+
+    const { data, error } = await db
+      .from("orders")
+      .select("id, user_id, order_type, service_name, amount, currency, status")
+      .order("created_at", { ascending: false })
+      .limit(50);
+
+    if (error) {
+      body.innerHTML = "<tr><td colspan='7'>Could not load orders.</td></tr>";
+      return;
+    }
+
+    if (!data || data.length === 0) {
+      body.innerHTML = "<tr><td colspan='7'>No orders have been placed yet.</td></tr>";
+      return;
+    }
+
+    body.innerHTML = data.map(order => `
+      <tr>
+        <td>${safeText(order.id.slice(0, 8))}</td>
+        <td>${safeText(order.user_id.slice(0, 8))}</td>
+        <td>${safeText(order.order_type)}</td>
+        <td>${safeText(order.service_name)}</td>
+        <td>${safeText(order.currency)} ${safeText(order.amount)}</td>
+        <td>${safeText(order.status)}</td>
+        <td>
+          <select data-order-id="${safeText(order.id)}" class="statusSelect">
+            ${["pending", "processing", "completed", "cancelled", "failed"]
+              .map(status => `
+                <option value="${status}" ${order.status === status ? "selected" : ""}>
+                  ${status}
+                </option>
+              `).join("")}
+          </select>
+          <button class="saveStatus" data-order-id="${safeText(order.id)}">
+            Save
+          </button>
+        </td>
+      </tr>
+    `).join("");
+
+    document.querySelectorAll(".saveStatus").forEach(button => {
+      button.addEventListener("click", () => updateOrderStatus(button.dataset.orderId));
+    });
+  }
+
+  async function updateOrderStatus(orderId) {
+    const select = document.querySelector(
+      `.statusSelect[data-order-id="${CSS.escape(orderId)}"]`
+    );
+
+    if (!select) return;
+
+    const allowedStatuses = [
+      "pending", "processing", "completed", "cancelled", "failed"
+    ];
+
+    if (!allowedStatuses.includes(select.value)) return;
+
+    const { error } = await db
+      .from("orders")
+      .update({
+        status: select.value,
+        updated_at: new Date().toISOString()
+      })
+      .eq("id", orderId);
+
+    if (error) {
+      showNotice("Could not update order status: " + error.message);
+      return;
+    }
+
+    showNotice("Order status updated successfully.");
+    await loadDashboard();
+  }
+
+  document.getElementById("logoutBtn").addEventListener("click", async () => {
+    await db.auth.signOut();
+    window.location.replace("auth.html");
+  });
+
+  checkAdmin();
+</script>
 </body>
 </html>
