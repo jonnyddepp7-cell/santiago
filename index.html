@@ -217,7 +217,7 @@ async function start(){
 
 /* VIRTUALSMS SUPPLIER CONNECTION */
 
-async function callVirtualSMS(action){
+async function callVirtualSMS(action) {   const { data, error } = await db.functions.invoke(     "virtualsms-services",     {       body: { action }     }   );    if (error) {     console.error("VirtualSMS diagnostic:", error);      let details = "";      try {       if (error.context) {         details = await error.context.clone().text();       }     } catch (e) {       details = "Could not read server response";     }      console.error("VirtualSMS server response:", details);      throw new Error(       "VirtualSMS failed. Server response: " + details     );   }    if (!data || !data.success) {     throw new Error(       data?.error || "VirtualSMS returned an unexpected response"     );   }    return data; }{
  const {data,error}=await db.functions.invoke("virtualsms-services",{
   body:{action}
  });
