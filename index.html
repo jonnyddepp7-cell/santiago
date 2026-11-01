@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SANTIAGO | Customer Dashboard</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <style>
 :root {
   --navy:#172554;
@@ -15,180 +15,426 @@
   --border:#e7e9f2;
   --muted:#788198;
 }
-*{box-sizing:border-box}
-body{margin:0;font-family:Arial,sans-serif;background:var(--bg);color:#202943}
-button,input,select{font:inherit}
-.layout{display:flex;min-height:100vh}
-.sidebar{width:240px;background:white;border-right:1px solid var(--border);padding:24px 16px;flex-shrink:0}
-.brand{font-size:23px;font-weight:900;letter-spacing:2px;color:var(--navy);padding:10px 12px 35px}
-.brand span{color:var(--purple)}
-.nav-label{font-size:10px;color:#a0a6b6;font-weight:bold;letter-spacing:1px;padding:0 12px;margin:20px 0 10px}
-.nav{display:block;width:100%;border:0;background:transparent;text-align:left;padding:13px 12px;border-radius:10px;color:#68728b;cursor:pointer;margin:3px 0}
-.nav.active,.nav:hover{background:#f0efff;color:#5546c9;font-weight:bold}
-.main{flex:1;min-width:0;padding:30px}
-.topbar{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-bottom:28px}
-.topbar h1{font-size:24px;margin:0;color:var(--navy)}
-.user{background:white;border:1px solid var(--border);padding:10px 13px;border-radius:10px;font-size:12px;overflow-wrap:anywhere}
-.welcome{margin-bottom:24px}
-.welcome h2{font-size:23px;margin:0 0 7px}
-.muted{color:var(--muted);font-size:13px}
-.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:15px;margin-bottom:25px}
-.stat,.panel{background:white;border:1px solid var(--border);border-radius:15px;padding:20px}
-.stat small{color:var(--muted)}
-.stat strong{display:block;font-size:22px;margin-top:12px;color:var(--navy)}
-.tabs{display:flex;gap:10px;margin:20px 0}
-.tab{border:1px solid var(--border);background:white;padding:12px 18px;border-radius:10px;cursor:pointer;color:#68728b}
-.tab.active{background:var(--navy);color:white}
-.panel h3{margin:0 0 7px;font-size:18px}
-.panel p{margin:0 0 20px}
-.field{margin-bottom:17px}
-.field label{display:block;font-size:12px;font-weight:bold;margin-bottom:8px;color:#4b5670}
-.field input,.field select{width:100%;padding:14px;border:1px solid #dfe3ee;border-radius:10px;background:white;outline:none}
-.field input:focus,.field select:focus{border-color:var(--purple)}
-.price{background:#f2f1ff;border:1px solid #e5e1ff;padding:17px;border-radius:12px;margin:5px 0 17px;display:flex;justify-content:space-between;align-items:center}
-.price strong{font-size:20px;color:#5143c7}
-.primary{border:0;background:var(--navy);color:white;padding:14px 20px;border-radius:10px;cursor:pointer;font-weight:bold;width:100%}
-.primary:disabled{opacity:.5;cursor:not-allowed}
-.notice{padding:13px;border-radius:10px;background:#f5f6fb;color:#64708a;font-size:12px;margin-top:15px;line-height:1.6}
-.status{font-size:12px;margin-top:13px;min-height:18px;line-height:1.5}
-.hidden{display:none!important}
-.empty{padding:20px;text-align:center;color:var(--muted);font-size:13px}
-table{width:100%;border-collapse:collapse;font-size:13px}
-th,td{text-align:left;padding:13px 9px;border-bottom:1px solid var(--border)}
-th{color:var(--muted);font-size:11px}
-@media(max-width:800px){
- .sidebar{width:75px;padding:18px 8px}
- .brand{font-size:12px;padding:8px 3px 25px;letter-spacing:0}
- .nav{font-size:0;text-align:center;padding:14px 3px}
- .nav-label{display:none}
- .main{padding:20px 13px}
- .stats{grid-template-columns:1fr}
+* { box-sizing:border-box; }
+body {
+  margin:0;
+  font-family:Arial,sans-serif;
+  background:var(--bg);
+  color:#202943;
 }
-@media(max-width:520px){
- .topbar{align-items:flex-start;flex-direction:column}
- .tabs{flex-wrap:wrap}
+button,input,select { font:inherit; }
+.layout { display:flex; min-height:100vh; }
+.sidebar {
+  width:240px;
+  background:white;
+  border-right:1px solid var(--border);
+  padding:24px 16px;
+  flex-shrink:0;
+}
+.brand {
+  font-size:23px;
+  font-weight:900;
+  letter-spacing:2px;
+  color:var(--navy);
+  padding:10px 12px 35px;
+}
+.brand span { color:var(--purple); }
+.nav-label {
+  font-size:10px;
+  color:#a0a6b6;
+  font-weight:bold;
+  letter-spacing:1px;
+  padding:0 12px;
+  margin:20px 0 10px;
+}
+.nav {
+  display:block;
+  width:100%;
+  border:0;
+  background:transparent;
+  text-align:left;
+  padding:13px 12px;
+  border-radius:10px;
+  color:#68728b;
+  cursor:pointer;
+  margin:3px 0;
+}
+.nav.active,.nav:hover {
+  background:#f0efff;
+  color:#5546c9;
+  font-weight:bold;
+}
+.main {
+  flex:1;
+  min-width:0;
+  padding:30px;
+}
+.topbar {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:15px;
+  margin-bottom:28px;
+}
+.topbar h1 {
+  font-size:24px;
+  margin:0;
+  color:var(--navy);
+}
+.user {
+  background:white;
+  border:1px solid var(--border);
+  padding:10px 13px;
+  border-radius:10px;
+  font-size:12px;
+  overflow-wrap:anywhere;
+}
+.welcome { margin-bottom:24px; }
+.welcome h2 {
+  font-size:23px;
+  margin:0 0 7px;
+}
+.muted { color:var(--muted); font-size:13px; }
+.stats {
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:15px;
+  margin-bottom:25px;
+}
+.stat,.panel {
+  background:white;
+  border:1px solid var(--border);
+  border-radius:15px;
+  padding:20px;
+}
+.stat small { color:var(--muted); }
+.stat strong {
+  display:block;
+  font-size:22px;
+  margin-top:12px;
+  color:var(--navy);
+}
+.tabs {
+  display:flex;
+  gap:10px;
+  margin:20px 0;
+}
+.tab {
+  border:1px solid var(--border);
+  background:white;
+  padding:12px 18px;
+  border-radius:10px;
+  cursor:pointer;
+  color:#68728b;
+}
+.tab.active {
+  background:var(--navy);
+  color:white;
+}
+.panel h3 { margin:0 0 7px; font-size:18px; }
+.panel p { margin:0 0 20px; }
+.field { margin-bottom:17px; }
+.field label {
+  display:block;
+  font-size:12px;
+  font-weight:bold;
+  margin-bottom:8px;
+  color:#4b5670;
+}
+.field input,.field select {
+  width:100%;
+  padding:14px;
+  border:1px solid #dfe3ee;
+  border-radius:10px;
+  background:white;
+  outline:none;
+}
+.field input:focus,.field select:focus {
+  border-color:var(--purple);
+}
+.price {
+  background:#f2f1ff;
+  border:1px solid #e5e1ff;
+  padding:17px;
+  border-radius:12px;
+  margin:5px 0 17px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+}
+.price strong { font-size:20px; color:#5143c7; }
+.primary {
+  border:0;
+  background:var(--navy);
+  color:white;
+  padding:14px 20px;
+  border-radius:10px;
+  cursor:pointer;
+  font-weight:bold;
+  width:100%;
+}
+.primary:disabled { opacity:.5; cursor:not-allowed; }
+.notice {
+  padding:13px;
+  border-radius:10px;
+  background:#f5f6fb;
+  color:#64708a;
+  font-size:12px;
+  margin-top:15px;
+  line-height:1.6;
+}
+.status {
+  font-size:12px;
+  margin-top:13px;
+  min-height:18px;
+  line-height:1.5;
+  overflow-wrap:anywhere;
+}
+.hidden { display:none!important; }
+.empty {
+  padding:20px;
+  text-align:center;
+  color:var(--muted);
+  font-size:13px;
+}
+.table-wrap { width:100%; overflow-x:auto; }
+table { width:100%; border-collapse:collapse; font-size:13px; }
+th,td {
+  text-align:left;
+  padding:13px 9px;
+  border-bottom:1px solid var(--border);
+}
+th { color:var(--muted); font-size:11px; }
+
+@media(max-width:800px) {
+  .sidebar { width:75px; padding:18px 8px; }
+  .brand {
+    font-size:12px;
+    padding:8px 3px 25px;
+    letter-spacing:0;
+  }
+  .nav {
+    font-size:0;
+    text-align:center;
+    padding:14px 3px;
+  }
+  .nav-label { display:none; }
+  .main { padding:20px 13px; }
+  .stats { grid-template-columns:1fr; }
+}
+@media(max-width:520px) {
+  .topbar {
+    align-items:flex-start;
+    flex-direction:column;
+  }
+  .tabs { flex-wrap:wrap; }
+  .price {
+    align-items:flex-start;
+    flex-direction:column;
+  }
 }
 </style>
 </head>
+
 <body>
 
 <div class="layout">
+
 <aside class="sidebar">
- <div class="brand">SANTI<span>AGO</span></div>
- <div class="nav-label">CUSTOMER MENU</div>
- <button class="nav active" onclick="showPage('orders',this)">🛍 Place an order</button>
- <button class="nav" onclick="showPage('history',this)">📋 Order history</button>
- <button class="nav" onclick="showPage('wallet',this)">💳 My wallet</button>
- <div class="nav-label">ACCOUNT</div>
- <button class="nav" onclick="showPage('support',this)">💬 Help & support</button>
- <button class="nav" onclick="logout()">↪ Sign out</button>
+  <div class="brand">SANTI<span>AGO</span></div>
+
+  <div class="nav-label">CUSTOMER MENU</div>
+
+  <button class="nav active" onclick="showPage('orders',this)">
+    🛍 Place an order
+  </button>
+
+  <button class="nav" onclick="showPage('history',this)">
+    📋 Order history
+  </button>
+
+  <button class="nav" onclick="showPage('wallet',this)">
+    💳 My wallet
+  </button>
+
+  <div class="nav-label">ACCOUNT</div>
+
+  <button class="nav" onclick="showPage('support',this)">
+    💬 Help &amp; support
+  </button>
+
+  <button class="nav" onclick="logout()">
+    ↪ Sign out
+  </button>
 </aside>
 
 <main class="main">
- <div class="topbar">
-  <h1>Customer Dashboard</h1>
-  <div class="user" id="userEmail">Checking account...</div>
- </div>
 
- <section class="welcome">
-  <h2>Welcome to SANTIAGO 👋</h2>
-  <div class="muted">Virtual numbers and social media services in one place.</div>
- </section>
-
- <div class="stats">
-  <div class="stat"><small>Wallet balance</small><strong>₦0.00</strong></div>
-  <div class="stat"><small>Total orders</small><strong id="orderCount">0</strong></div>
-  <div class="stat"><small>Account status</small><strong style="font-size:17px;color:#15966a">Active</strong></div>
- </div>
-
- <section id="ordersPage">
-  <div class="tabs">
-   <button class="tab active" onclick="changeType('virtual',this)">Virtual Numbers</button>
-   <button class="tab" onclick="changeType('social',this)">Social Media Boosting</button>
+  <div class="topbar">
+    <h1>Customer Dashboard</h1>
+    <div class="user" id="userEmail">Checking account...</div>
   </div>
 
-  <div class="panel">
-   <h3 id="formTitle">Get a Virtual Number</h3>
-   <p class="muted" id="formDescription">Choose a country and service from our number supplier.</p>
+  <section class="welcome">
+    <h2>Welcome to SANTIAGO 👋</h2>
+    <div class="muted">
+      Virtual numbers and social media services in one place.
+    </div>
+  </section>
 
-   <div id="virtualForm">
-    <div class="field">
-     <label>Select country</label>
-     <select id="countrySelect" onchange="loadNumberServices()">
-      <option value="">Loading countries...</option>
-     </select>
+  <div class="stats">
+    <div class="stat">
+      <small>Wallet balance</small>
+      <strong>₦0.00</strong>
     </div>
-    <div class="field">
-     <label>Select service</label>
-     <select id="numberServiceSelect" onchange="updateNumberPrice()">
-      <option value="">Select a country first</option>
-     </select>
-    </div>
-   </div>
 
-   <div id="socialForm" class="hidden">
-    <div class="field">
-     <label>Select platform</label>
-     <select id="platformSelect" onchange="loadSocialServices()">
-      <option value="">Choose platform</option>
-     </select>
+    <div class="stat">
+      <small>Total orders</small>
+      <strong id="orderCount">0</strong>
     </div>
-    <div class="field">
-     <label>Select service</label>
-     <select id="socialServiceSelect" onchange="updateSocialPrice()">
-      <option value="">Select a platform first</option>
-     </select>
-    </div>
-    <div class="field">
-     <label>Post or profile link</label>
-     <input id="targetLink" type="url" placeholder="https://...">
-    </div>
-    <div class="field">
-     <label>Quantity</label>
-     <input id="quantity" type="number" min="1" placeholder="Enter quantity" oninput="updateSocialPrice()">
-    </div>
-   </div>
 
-   <div class="price">
-    <span>Estimated supplier price</span>
-    <strong id="priceDisplay">Not available</strong>
-   </div>
-
-   <button class="primary" onclick="continueOrder()">Continue</button>
-   <div class="status" id="formStatus"></div>
-
-   <div class="notice">
-    Live supplier information is being retrieved through our secure backend. Purchases and OTP delivery are not enabled yet.
-   </div>
+    <div class="stat">
+      <small>Account status</small>
+      <strong style="font-size:17px;color:#15966a">Active</strong>
+    </div>
   </div>
- </section>
 
- <section id="historyPage" class="panel hidden">
-  <h3>Order history</h3>
-  <p class="muted">Your previous orders will appear here.</p>
-  <div id="historyContent" class="empty">Loading...</div>
- </section>
+  <section id="ordersPage">
 
- <section id="walletPage" class="panel hidden">
-  <h3>My wallet</h3>
-  <p class="muted">Your wallet account.</p>
-  <div class="price"><span>Available balance</span><strong>₦0.00</strong></div>
-  <div class="notice">Deposits and withdrawals are not enabled yet. Do not send money to an unverified payment address.</div>
- </section>
+    <div class="tabs">
+      <button class="tab active" onclick="changeType('virtual',this)">
+        Virtual Numbers
+      </button>
 
- <section id="supportPage" class="panel hidden">
-  <h3>Help & support</h3>
-  <p class="muted">Need assistance with your account?</p>
-  <div class="notice">Contact the SANTIAGO support team through your official support channel.</div>
- </section>
+      <button class="tab" onclick="changeType('social',this)">
+        Social Media Boosting
+      </button>
+    </div>
+
+    <div class="panel">
+
+      <h3 id="formTitle">Get a Virtual Number</h3>
+
+      <p class="muted" id="formDescription">
+        Choose a country and service from our number supplier.
+      </p>
+
+      <div id="virtualForm">
+
+        <div class="field">
+          <label for="countrySelect">Select country</label>
+          <select id="countrySelect" onchange="loadNumberServices()">
+            <option value="">Loading countries...</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="numberServiceSelect">Select service</label>
+          <select id="numberServiceSelect" onchange="updateNumberPrice()">
+            <option value="">Select a country first</option>
+          </select>
+        </div>
+
+      </div>
+
+      <div id="socialForm" class="hidden">
+
+        <div class="field">
+          <label for="platformSelect">Select platform</label>
+          <select id="platformSelect" onchange="loadSocialServices()">
+            <option value="">Choose platform</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="socialServiceSelect">Select service</label>
+          <select id="socialServiceSelect" onchange="updateSocialPrice()">
+            <option value="">Select a platform first</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="targetLink">Post or profile link</label>
+          <input id="targetLink" type="url" placeholder="https://...">
+        </div>
+
+        <div class="field">
+          <label for="quantity">Quantity</label>
+          <input
+            id="quantity"
+            type="number"
+            min="1"
+            placeholder="Enter quantity"
+            oninput="updateSocialPrice()"
+          >
+        </div>
+
+      </div>
+
+      <div class="price">
+        <span>Estimated supplier price</span>
+        <strong id="priceDisplay">Not available</strong>
+      </div>
+
+      <button class="primary" onclick="continueOrder()">
+        Continue
+      </button>
+
+      <div class="status" id="formStatus" role="status" aria-live="polite"></div>
+
+      <div class="notice">
+        Live supplier information is retrieved through our secure backend.
+        Purchases and OTP delivery are not enabled yet.
+      </div>
+
+    </div>
+  </section>
+
+  <section id="historyPage" class="panel hidden">
+    <h3>Order history</h3>
+    <p class="muted">Your previous orders will appear here.</p>
+    <div id="historyContent" class="empty">Loading...</div>
+  </section>
+
+  <section id="walletPage" class="panel hidden">
+    <h3>My wallet</h3>
+    <p class="muted">Your wallet account.</p>
+
+    <div class="price">
+      <span>Available balance</span>
+      <strong>₦0.00</strong>
+    </div>
+
+    <div class="notice">
+      Deposits and withdrawals are not enabled yet.
+      Do not send money to an unverified payment address.
+    </div>
+  </section>
+
+  <section id="supportPage" class="panel hidden">
+    <h3>Help &amp; support</h3>
+    <p class="muted">Need assistance with your account?</p>
+
+    <div class="notice">
+      Contact the SANTIAGO support team through your official support channel.
+    </div>
+  </section>
+
 </main>
 </div>
 
 <script>
+"use strict";
+
 const SUPABASE_URL = "https://anzrwkwyjcdessheviyw.supabase.co";
+
 const SUPABASE_KEY = "sb_publishable_txD8O7D0v34s59Z2p-nqaA_6ur0PFFX";
 
-const db = window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+const db = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY
+);
 
 let currentUser = null;
 let numberServices = [];
@@ -197,395 +443,783 @@ let socialServices = [];
 let selectedNumber = null;
 let selectedSocial = null;
 
-async function start(){
- const {data,error} = await db.auth.getSession();
 
- if(error || !data.session){
-  window.location.href="auth.html";
-  return;
- }
+/* START DASHBOARD */
 
- currentUser=data.session.user;
- document.getElementById("userEmail").textContent=currentUser.email || "Customer";
+async function start() {
+  const status = document.getElementById("formStatus");
 
- await Promise.all([
-  loadVirtualSMS(),
-  loadSocialCatalogue(),
-  loadOrders()
- ]);
+  try {
+    const { data, error } = await db.auth.getSession();
+
+    if (error || !data.session) {
+      window.location.href = "auth.html";
+      return;
+    }
+
+    currentUser = data.session.user;
+
+    document.getElementById("userEmail").textContent =
+      currentUser.email || "Customer";
+
+    await Promise.allSettled([
+      loadVirtualSMS(),
+      loadSocialCatalogue(),
+      loadOrders()
+    ]);
+
+  } catch (error) {
+    console.error("Dashboard startup error:", error);
+
+    status.textContent =
+      "The dashboard could not finish loading. Please refresh and try again.";
+  }
 }
+
 
 /* VIRTUALSMS SUPPLIER CONNECTION */
 
-async function callVirtualSMS(action) {   const { data, error } = await db.functions.invoke(     "virtualsms-services",     {       body: { action }     }   );    if (error) {     console.error("VirtualSMS diagnostic:", error);      let details = "";      try {       if (error.context) {         details = await error.context.clone().text();       }     } catch (e) {       details = "Could not read server response";     }      console.error("VirtualSMS server response:", details);      throw new Error(       "VirtualSMS failed. Server response: " + details     );   }    if (!data || !data.success) {     throw new Error(       data?.error || "VirtualSMS returned an unexpected response"     );   }    return data; }{
- const {data,error}=await db.functions.invoke("virtualsms-services",{
-  body:{action}
- });
+async function callVirtualSMS(action) {
 
- if(error) throw new Error(error.message || "Could not contact supplier");
+  const { data, error } = await db.functions.invoke(
+    "virtualsms-services",
+    {
+      body: { action }
+    }
+  );
 
- if(!data || !data.success){
-  throw new Error(data?.error || "Supplier request failed");
- }
+  if (error) {
 
- return data.data;
-}
+    console.error("VirtualSMS function error:", error);
 
-/* Handle common supplier response formats */
+    let responseDetails = "";
 
-function extractList(response,possibleKeys){
- if(Array.isArray(response)) return response;
+    try {
+      if (
+        error.context &&
+        typeof error.context.clone === "function"
+      ) {
+        responseDetails = await error.context.clone().text();
+      }
+    } catch (readError) {
+      console.warn(
+        "Could not read function response body:",
+        readError
+      );
+    }
 
- if(response && typeof response==="object"){
-  for(const key of possibleKeys){
-   if(Array.isArray(response[key])) return response[key];
+    console.error(
+      "VirtualSMS server response:",
+      responseDetails || "(no response body available)"
+    );
+
+    let message =
+      error.message || "The Edge Function request failed.";
+
+    if (responseDetails) {
+      try {
+        const parsed = JSON.parse(responseDetails);
+
+        message =
+          parsed.error ||
+          parsed.message ||
+          responseDetails;
+
+        if (parsed.supplier_status) {
+          message +=
+            " (Supplier status: " +
+            parsed.supplier_status +
+            ")";
+        }
+
+        if (parsed.missing) {
+          const missingNames = Object.keys(parsed.missing)
+            .filter(key => parsed.missing[key]);
+
+          if (missingNames.length) {
+            message +=
+              ". Missing settings: " +
+              missingNames.join(", ");
+          }
+        }
+
+      } catch (parseError) {
+        message = responseDetails;
+      }
+    }
+
+    throw new Error(message);
   }
 
-  if(response.data && typeof response.data==="object"){
-   if(Array.isArray(response.data)) return response.data;
-
-   for(const key of possibleKeys){
-    if(Array.isArray(response.data[key])) return response.data[key];
-   }
-  }
- }
-
- return [];
-}
-
-function getCountryCode(item){
- return String(
-  item.country_code ??
-  item.iso ??
-  item.iso2 ??
-  item.code ??
-  item.country ??
-  item.id ??
-  ""
- );
-}
-
-function getCountryName(item){
- return String(
-  item.country_name ??
-  item.name ??
-  item.title ??
-  item.country ??
-  item.code ??
-  ""
- );
-}
-
-function getServiceCountry(item){
- return String(
-  item.country_code ??
-  item.country ??
-  item.iso ??
-  item.iso2 ??
-  item.country_id ??
-  ""
- );
-}
-
-function getServiceName(item){
- return String(
-  item.service_name ??
-  item.name ??
-  item.service ??
-  item.title ??
-  item.application ??
-  ""
- );
-}
-
-function getServicePrice(item){
- const value = item.price ?? item.cost ?? item.amount ?? item.rate;
- const number = Number(value);
- return Number.isFinite(number) ? number : null;
-}
-
-async function loadVirtualSMS(){
- const status=document.getElementById("formStatus");
- status.textContent="Connecting to VirtualSMS supplier...";
-
- try{
-  const [countryResponse,serviceResponse]=await Promise.all([
-   callVirtualSMS("countries"),
-   callVirtualSMS("services")
-  ]);
-
-  countries=extractList(countryResponse,["countries","results","items"]);
-  numberServices=extractList(serviceResponse,["services","results","items"]);
-
-  renderCountries();
-
-  if(!countries.length || !numberServices.length){
-   status.textContent="Connected to VirtualSMS, but the response format needs checking. No catalogue has been assumed.";
-   console.log("VirtualSMS countries response:",countryResponse);
-   console.log("VirtualSMS services response:",serviceResponse);
-   return;
+  if (!data || data.success !== true) {
+    throw new Error(
+      data?.error || "The supplier returned an unexpected response."
+    );
   }
 
-  status.textContent="VirtualSMS connected. "+countries.length+" country entries and "+numberServices.length+" service entries received.";
-
- }catch(error){
-  status.textContent="VirtualSMS connection error: "+error.message;
-  console.error(error);
- }
+  return data.data;
 }
 
-function renderCountries(){
- const select=document.getElementById("countrySelect");
- select.innerHTML='<option value="">Choose a country</option>';
 
- countries.forEach((country,index)=>{
-  const code=getCountryCode(country);
-  const name=getCountryName(country);
-  if(!code && !name) return;
+/* READ SUPPLIER DATA */
 
-  const option=document.createElement("option");
-  option.value=code || name;
-  option.textContent=name || code;
-  option.dataset.index=index;
-  select.appendChild(option);
- });
+function extractList(response, possibleKeys) {
+
+  if (Array.isArray(response)) {
+    return response;
+  }
+
+  if (!response || typeof response !== "object") {
+    return [];
+  }
+
+  for (const key of possibleKeys) {
+    if (Array.isArray(response[key])) {
+      return response[key];
+    }
+  }
+
+  if (response.data) {
+    if (Array.isArray(response.data)) {
+      return response.data;
+    }
+
+    for (const key of possibleKeys) {
+      if (Array.isArray(response.data[key])) {
+        return response.data[key];
+      }
+    }
+  }
+
+  return [];
 }
 
-function loadNumberServices(){
- const country=document.getElementById("countrySelect").value;
- const select=document.getElementById("numberServiceSelect");
 
- selectedNumber=null;
- document.getElementById("priceDisplay").textContent="Not available";
- select.innerHTML='<option value="">Choose a service</option>';
+function getCountryCode(country) {
+  if (typeof country === "string") return country;
 
- const matching=numberServices.filter(service=>{
-  const serviceCountry=getServiceCountry(service);
-  return serviceCountry.toLowerCase()===country.toLowerCase();
- });
-
- matching.forEach((service,index)=>{
-  const name=getServiceName(service);
-  if(!name) return;
-
-  const option=document.createElement("option");
-  option.value=String(index);
-  option.textContent=name;
-  select.appendChild(option);
- });
-
- if(!matching.length){
-  const option=document.createElement("option");
-  option.value="";
-  option.textContent="No services found for this country";
-  select.appendChild(option);
- }
+  return String(
+    country.code ??
+    country.country_code ??
+    country.iso ??
+    country.iso2 ??
+    country.id ??
+    ""
+  );
 }
 
-function updateNumberPrice(){
- const select=document.getElementById("numberServiceSelect");
- const country=document.getElementById("countrySelect").value;
 
- const matching=numberServices.filter(service=>
-  getServiceCountry(service).toLowerCase()===country.toLowerCase()
- );
+function getCountryName(country) {
+  if (typeof country === "string") return country;
 
- selectedNumber=matching[Number(select.value)] || null;
-
- const price=selectedNumber ? getServicePrice(selectedNumber) : null;
- document.getElementById("priceDisplay").textContent=
-  price===null ? "Supplier price unavailable" : money(price);
+  return String(
+    country.name ??
+    country.country_name ??
+    country.title ??
+    country.country ??
+    ""
+  );
 }
+
+
+function getServiceCountry(service) {
+  return String(
+    service.country_code ??
+    service.country ??
+    service.country_name ??
+    service.iso ??
+    ""
+  );
+}
+
+
+function getServiceName(service) {
+  if (typeof service === "string") return service;
+
+  return String(
+    service.name ??
+    service.service_name ??
+    service.service ??
+    service.title ??
+    ""
+  );
+}
+
+
+function getServicePrice(item) {
+  const value =
+    item.price ??
+    item.cost ??
+    item.amount ??
+    item.rate;
+
+  const number = Number(value);
+
+  return (
+    value !== null &&
+    value !== undefined &&
+    value !== "" &&
+    Number.isFinite(number)
+  ) ? number : null;
+}
+
+
+/* LOAD VIRTUAL NUMBERS */
+
+async function loadVirtualSMS() {
+
+  const status = document.getElementById("formStatus");
+
+  status.textContent =
+    "Connecting to VirtualSMS supplier...";
+
+  try {
+
+    const [
+      countryResponse,
+      serviceResponse
+    ] = await Promise.all([
+      callVirtualSMS("countries"),
+      callVirtualSMS("services")
+    ]);
+
+    countries = extractList(
+      countryResponse,
+      ["countries", "results", "items"]
+    );
+
+    numberServices = extractList(
+      serviceResponse,
+      ["services", "results", "items"]
+    );
+
+    renderCountries();
+
+    if (!countries.length || !numberServices.length) {
+
+      status.textContent =
+        "VirtualSMS responded, but its catalogue format needs checking. No services have been assumed.";
+
+      console.log(
+        "VirtualSMS countries response:",
+        countryResponse
+      );
+
+      console.log(
+        "VirtualSMS services response:",
+        serviceResponse
+      );
+
+      return;
+    }
+
+    status.textContent =
+      "VirtualSMS connected. " +
+      countries.length +
+      " country entries and " +
+      numberServices.length +
+      " service entries received.";
+
+  } catch (error) {
+
+    status.textContent =
+      "VirtualSMS connection error: " + error.message;
+
+    console.error("loadVirtualSMS:", error);
+  }
+}
+
+
+/* DISPLAY COUNTRIES */
+
+function renderCountries() {
+
+  const select =
+    document.getElementById("countrySelect");
+
+  select.innerHTML = "";
+
+  const placeholder =
+    document.createElement("option");
+
+  placeholder.value = "";
+
+  placeholder.textContent =
+    countries.length
+      ? "Choose a country"
+      : "No countries received";
+
+  select.appendChild(placeholder);
+
+  countries.forEach((country, index) => {
+
+    const code = getCountryCode(country);
+    const name = getCountryName(country);
+
+    if (!code && !name) return;
+
+    const option =
+      document.createElement("option");
+
+    option.value = code || name;
+    option.textContent = name || code;
+    option.dataset.index = String(index);
+
+    select.appendChild(option);
+  });
+}
+
+
+/* LOAD NUMBER SERVICES */
+
+function loadNumberServices() {
+
+  const country =
+    document.getElementById("countrySelect").value;
+
+  const select =
+    document.getElementById("numberServiceSelect");
+
+  selectedNumber = null;
+
+  document.getElementById("priceDisplay").textContent =
+    "Not available";
+
+  select.innerHTML =
+    '<option value="">Choose a service</option>';
+
+  const matching = numberServices.filter(service => {
+
+    const serviceCountry = getServiceCountry(service);
+
+    return serviceCountry.toLowerCase() ===
+      country.toLowerCase();
+  });
+
+  matching.forEach((service, index) => {
+
+    const name = getServiceName(service);
+
+    if (!name) return;
+
+    const option =
+      document.createElement("option");
+
+    option.value = String(index);
+    option.textContent = name;
+
+    select.appendChild(option);
+  });
+
+  if (!matching.length && country) {
+
+    const option =
+      document.createElement("option");
+
+    option.value = "";
+    option.textContent =
+      "No services found for this country";
+
+    select.appendChild(option);
+  }
+}
+
+
+/* UPDATE NUMBER PRICE */
+
+function updateNumberPrice() {
+
+  const select =
+    document.getElementById("numberServiceSelect");
+
+  const country =
+    document.getElementById("countrySelect").value;
+
+  const matching = numberServices.filter(service =>
+    getServiceCountry(service).toLowerCase() ===
+    country.toLowerCase()
+  );
+
+  selectedNumber =
+    select.value === ""
+      ? null
+      : (matching[Number(select.value)] || null);
+
+  const price =
+    selectedNumber
+      ? getServicePrice(selectedNumber)
+      : null;
+
+  document.getElementById("priceDisplay").textContent =
+    price === null
+      ? "Supplier price unavailable"
+      : money(price);
+}
+
 
 /* SOCIAL BOOSTING CATALOGUE */
 
-async function loadSocialCatalogue(){
- const status=document.getElementById("formStatus");
+async function loadSocialCatalogue() {
 
- const {data,error}=await db
-  .from("service_catalog")
-  .select("*")
-  .eq("category","social_boosting")
-  .eq("is_active",true)
-  .order("service_name");
+  const { data, error } = await db
+    .from("service_catalog")
+    .select("*")
+    .eq("category", "social_boosting")
+    .eq("is_active", true)
+    .order("service_name");
 
- if(error){
-  console.error("Social catalogue error:",error);
-  return;
- }
+  if (error) {
 
- socialServices=data || [];
+    console.error("Social catalogue error:", error);
 
- const platforms=[...new Set(
-  socialServices.map(item=>item.platform).filter(Boolean)
- )];
+    document.getElementById("formStatus").textContent =
+      "Virtual number status is shown above. Social catalogue could not be loaded.";
 
- const select=document.getElementById("platformSelect");
- select.innerHTML='<option value="">Choose a platform</option>';
+    return;
+  }
 
- platforms.forEach(platform=>{
-  const option=document.createElement("option");
-  option.value=platform;
-  option.textContent=platform;
-  select.appendChild(option);
- });
+  socialServices = data || [];
+
+  const platforms = [
+    ...new Set(
+      socialServices
+        .map(item => item.platform)
+        .filter(Boolean)
+    )
+  ];
+
+  const select =
+    document.getElementById("platformSelect");
+
+  select.innerHTML =
+    '<option value="">Choose a platform</option>';
+
+  platforms.forEach(platform => {
+
+    const option =
+      document.createElement("option");
+
+    option.value = platform;
+    option.textContent = platform;
+
+    select.appendChild(option);
+  });
 }
 
-function loadSocialServices(){
- const platform=document.getElementById("platformSelect").value;
- const select=document.getElementById("socialServiceSelect");
 
- selectedSocial=null;
- select.innerHTML='<option value="">Choose a service</option>';
- document.getElementById("priceDisplay").textContent="Not available";
+function loadSocialServices() {
 
- socialServices.filter(item=>item.platform===platform)
- .forEach(item=>{
-  const option=document.createElement("option");
-  option.value=item.id;
-  option.textContent=item.service_name;
-  select.appendChild(option);
- });
+  const platform =
+    document.getElementById("platformSelect").value;
+
+  const select =
+    document.getElementById("socialServiceSelect");
+
+  selectedSocial = null;
+
+  select.innerHTML =
+    '<option value="">Choose a service</option>';
+
+  document.getElementById("priceDisplay").textContent =
+    "Not available";
+
+  socialServices
+    .filter(item => item.platform === platform)
+    .forEach(item => {
+
+      const option =
+        document.createElement("option");
+
+      option.value = item.id;
+      option.textContent = item.service_name;
+
+      select.appendChild(option);
+    });
 }
 
-function updateSocialPrice(){
- const id=document.getElementById("socialServiceSelect").value;
- selectedSocial=socialServices.find(item=>item.id===id) || null;
 
- const quantity=Number(document.getElementById("quantity").value);
- const valid=selectedSocial && Number.isInteger(quantity) && quantity>0 &&
-  (!selectedSocial.min_quantity || quantity>=selectedSocial.min_quantity) &&
-  (!selectedSocial.max_quantity || quantity<=selectedSocial.max_quantity);
+/* UPDATE SOCIAL PRICE */
 
- document.getElementById("priceDisplay").textContent=
-  valid ? money(Number(selectedSocial.price)*quantity) : "Not available";
+function updateSocialPrice() {
+
+  const id =
+    document.getElementById("socialServiceSelect").value;
+
+  selectedSocial =
+    socialServices.find(item => item.id === id) || null;
+
+  const quantity =
+    Number(document.getElementById("quantity").value);
+
+  const valid =
+    selectedSocial &&
+    Number.isInteger(quantity) &&
+    quantity > 0 &&
+    (
+      !selectedSocial.min_quantity ||
+      quantity >= selectedSocial.min_quantity
+    ) &&
+    (
+      !selectedSocial.max_quantity ||
+      quantity <= selectedSocial.max_quantity
+    );
+
+  document.getElementById("priceDisplay").textContent =
+    valid
+      ? money(Number(selectedSocial.price) * quantity)
+      : "Not available";
 }
 
-/* DISPLAY AND NAVIGATION */
 
-function money(value){
- return "₦"+Number(value).toLocaleString("en-NG",{
-  minimumFractionDigits:2,
-  maximumFractionDigits:2
- });
+/* CURRENCY DISPLAY */
+
+function money(value) {
+
+  return "₦" + Number(value).toLocaleString("en-NG", {
+    minimumFractionDigits:2,
+    maximumFractionDigits:2
+  });
 }
 
-function changeType(type,button){
- document.querySelectorAll(".tab").forEach(tab=>tab.classList.remove("active"));
- button.classList.add("active");
 
- const virtual=type==="virtual";
+/* CHANGE ORDER TYPE */
 
- document.getElementById("virtualForm").classList.toggle("hidden",!virtual);
- document.getElementById("socialForm").classList.toggle("hidden",virtual);
+function changeType(type, button) {
 
- document.getElementById("formTitle").textContent=
-  virtual ? "Get a Virtual Number" : "Boost Your Social Media";
+  document.querySelectorAll(".tab")
+    .forEach(tab => tab.classList.remove("active"));
 
- document.getElementById("formDescription").textContent=
-  virtual ? "Choose a country and service from our supplier." :
-  "Choose a platform, service and quantity.";
+  button.classList.add("active");
 
- document.getElementById("priceDisplay").textContent="Not available";
- document.getElementById("formStatus").textContent="";
+  const virtual = type === "virtual";
+
+  document.getElementById("virtualForm")
+    .classList.toggle("hidden", !virtual);
+
+  document.getElementById("socialForm")
+    .classList.toggle("hidden", virtual);
+
+  document.getElementById("formTitle").textContent =
+    virtual
+      ? "Get a Virtual Number"
+      : "Boost Your Social Media";
+
+  document.getElementById("formDescription").textContent =
+    virtual
+      ? "Choose a country and service from our number supplier."
+      : "Choose a platform, service and quantity.";
+
+  document.getElementById("priceDisplay").textContent =
+    "Not available";
+
+  document.getElementById("formStatus").textContent = "";
 }
 
-function showPage(page,button){
- ["orders","history","wallet","support"].forEach(name=>{
-  document.getElementById(name+"Page").classList.toggle("hidden",name!==page);
- });
 
- document.querySelectorAll(".nav").forEach(nav=>nav.classList.remove("active"));
- button.classList.add("active");
+/* NAVIGATION */
+
+function showPage(page, button) {
+
+  ["orders", "history", "wallet", "support"]
+    .forEach(name => {
+
+      document.getElementById(name + "Page")
+        .classList.toggle("hidden", name !== page);
+    });
+
+  document.querySelectorAll(".nav")
+    .forEach(nav => nav.classList.remove("active"));
+
+  button.classList.add("active");
 }
+
 
 /* ORDER VALIDATION ONLY - NO PURCHASE YET */
 
-function continueOrder(){
- const status=document.getElementById("formStatus");
+function continueOrder() {
 
- if(document.getElementById("virtualForm").classList.contains("hidden")){
-  const link=document.getElementById("targetLink").value.trim();
-  const quantity=Number(document.getElementById("quantity").value);
+  const status =
+    document.getElementById("formStatus");
 
-  if(!selectedSocial || !link || !Number.isInteger(quantity) || quantity<1){
-   status.textContent="Please select a platform, service, valid link and quantity.";
-   return;
+  if (
+    document.getElementById("virtualForm")
+      .classList.contains("hidden")
+  ) {
+
+    const link =
+      document.getElementById("targetLink").value.trim();
+
+    const quantity =
+      Number(document.getElementById("quantity").value);
+
+    if (
+      !selectedSocial ||
+      !link ||
+      !Number.isInteger(quantity) ||
+      quantity < 1
+    ) {
+
+      status.textContent =
+        "Please select a platform, service, valid link and quantity.";
+
+      return;
+    }
+
+    try {
+
+      const parsedLink = new URL(link);
+
+      if (
+        !["http:", "https:"].includes(parsedLink.protocol)
+      ) {
+        throw new Error("Invalid protocol");
+      }
+
+    } catch (_) {
+
+      status.textContent =
+        "Please enter a valid link beginning with https://";
+
+      return;
+    }
+
+    if (
+      selectedSocial.min_quantity &&
+      quantity < selectedSocial.min_quantity
+    ) {
+
+      status.textContent =
+        "Minimum quantity: " +
+        selectedSocial.min_quantity;
+
+      return;
+    }
+
+    if (
+      selectedSocial.max_quantity &&
+      quantity > selectedSocial.max_quantity
+    ) {
+
+      status.textContent =
+        "Maximum quantity: " +
+        selectedSocial.max_quantity;
+
+      return;
+    }
+
+    status.textContent =
+      "Social service selected. Order processing is not connected yet.";
+
+    return;
   }
 
-  if(selectedSocial.min_quantity && quantity<selectedSocial.min_quantity){
-   status.textContent="Minimum quantity: "+selectedSocial.min_quantity;
-   return;
+  if (!selectedNumber) {
+
+    status.textContent =
+      "Please choose a country and service.";
+
+    return;
   }
 
-  if(selectedSocial.max_quantity && quantity>selectedSocial.max_quantity){
-   status.textContent="Maximum quantity: "+selectedSocial.max_quantity;
-   return;
-  }
-
-  status.textContent="Social service selected. Order processing is not connected yet.";
-  return;
- }
-
- if(!selectedNumber){
-  status.textContent="Please choose a country and service.";
-  return;
- }
-
- status.textContent="VirtualSMS service selected. Number purchasing and OTP retrieval are the next integration steps.";
+  status.textContent =
+    "VirtualSMS service selected. Number purchasing and OTP retrieval are the next integration steps.";
 }
+
 
 /* CUSTOMER ORDER HISTORY */
 
-async function loadOrders(){
- const {data,error}=await db
-  .from("orders")
-  .select("id,service_name,status,amount,currency,created_at")
-  .eq("user_id",currentUser.id)
-  .order("created_at",{ascending:false});
+async function loadOrders() {
 
- if(error){
-  document.getElementById("historyContent").textContent="Unable to load orders.";
-  return;
- }
+  const container =
+    document.getElementById("historyContent");
 
- document.getElementById("orderCount").textContent=(data||[]).length;
+  const { data, error } = await db
+    .from("orders")
+    .select("id,service_name,status,amount,currency,created_at")
+    .eq("user_id", currentUser.id)
+    .order("created_at", { ascending:false });
 
- if(!data || !data.length){
-  document.getElementById("historyContent").textContent="You have no orders yet.";
-  return;
- }
+  if (error) {
 
- const table=document.createElement("table");
- table.innerHTML="<thead><tr><th>Service</th><th>Status</th><th>Amount</th></tr></thead>";
+    console.error("Order history error:", error);
 
- const body=document.createElement("tbody");
+    container.textContent =
+      "Unable to load orders.";
 
- data.forEach(order=>{
-  const row=document.createElement("tr");
+    return;
+  }
 
-  [order.service_name,order.status,money(order.amount)].forEach(value=>{
-   const cell=document.createElement("td");
-   cell.textContent=value || "-";
-   row.appendChild(cell);
+  document.getElementById("orderCount").textContent =
+    (data || []).length;
+
+  if (!data || !data.length) {
+
+    container.textContent =
+      "You have no orders yet.";
+
+    return;
+  }
+
+  const table =
+    document.createElement("table");
+
+  table.innerHTML =
+    "<thead><tr><th>Service</th><th>Status</th><th>Amount</th></tr></thead>";
+
+  const body =
+    document.createElement("tbody");
+
+  data.forEach(order => {
+
+    const row =
+      document.createElement("tr");
+
+    [
+      order.service_name,
+      order.status,
+      money(order.amount)
+    ].forEach(value => {
+
+      const cell =
+        document.createElement("td");
+
+      cell.textContent = value ?? "-";
+
+      row.appendChild(cell);
+    });
+
+    body.appendChild(row);
   });
 
-  body.appendChild(row);
- });
+  table.appendChild(body);
 
- table.appendChild(body);
+  container.innerHTML = "";
 
- const container=document.getElementById("historyContent");
- container.innerHTML="";
- container.appendChild(table);
+  const wrapper =
+    document.createElement("div");
+
+  wrapper.className = "table-wrap";
+
+  wrapper.appendChild(table);
+
+  container.appendChild(wrapper);
 }
 
-async function logout(){
- await db.auth.signOut();
- window.location.href="auth.html";
+
+/* SIGN OUT */
+
+async function logout() {
+
+  await db.auth.signOut();
+
+  window.location.href = "auth.html";
 }
+
+
+/* RUN DASHBOARD */
 
 start();
+
 </script>
 </body>
 </html>
