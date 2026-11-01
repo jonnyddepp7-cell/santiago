@@ -2,416 +2,576 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SANTIAGO | Admin Dashboard</title>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <style>
-    * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #f5f6fb;
-      color: #17213b;
-    }
-    .layout { display: flex; min-height: 100vh; }
-    aside {
-      width: 245px;
-      flex-shrink: 0;
-      background: #111b36;
-      color: white;
-      padding: 26px 18px;
-    }
-    .brand { font-size: 24px; font-weight: 800; letter-spacing: 2px; }
-    .admin-label { color: #b8c2df; font-size: 12px; margin: 8px 0 30px; }
-    nav a {
-      display: block;
-      color: #dce3f7;
-      text-decoration: none;
-      padding: 13px;
-      border-radius: 9px;
-      margin: 6px 0;
-    }
-    nav a:hover, nav a.active { background: #29385e; color: white; }
-    main { flex: 1; min-width: 0; padding: 30px; }
-    header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 15px;
-      flex-wrap: wrap;
-      margin-bottom: 28px;
-    }
-    h1 { margin: 0 0 8px; font-size: 27px; }
-    h2 { font-size: 18px; margin: 0 0 18px; }
-    .muted { color: #78839d; font-size: 13px; }
-    button, select {
-      border: 1px solid #dfe3ed;
-      border-radius: 8px;
-      padding: 10px 13px;
-      background: white;
-      color: #17213b;
-    }
-    button {
-      background: #29385e;
-      color: white;
-      border: 0;
-      cursor: pointer;
-    }
-    button:disabled { opacity: .5; cursor: not-allowed; }
-    .cards {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 16px;
-    }
-    .card, .panel {
-      background: white;
-      border: 1px solid #e8eaf1;
-      border-radius: 14px;
-      padding: 21px;
-    }
-    .card h3 { font-size: 13px; color: #78839d; margin: 0 0 13px; }
-    .value { font-size: 27px; font-weight: 700; }
-    .panel { margin-top: 23px; overflow: hidden; }
-    .table-wrap { overflow-x: auto; }
-    table {
-      border-collapse: collapse;
-      width: 100%;
-      min-width: 620px;
-      font-size: 13px;
-    }
-    th, td {
-      text-align: left;
-      padding: 13px 11px;
-      border-bottom: 1px solid #edf0f5;
-    }
-    th { color: #78839d; font-weight: 600; }
-    .message {
-      padding: 13px;
-      border-radius: 9px;
-      background: #f0f2f8;
-      color: #46516a;
-      margin: 15px 0;
-      font-size: 13px;
-    }
-    .hidden { display: none !important; }
-    #accessMessage {
-      max-width: 500px;
-      margin: 100px auto;
-      padding: 25px;
-      text-align: center;
-    }
-    @media(max-width: 750px) {
-      .layout { display: block; }
-      aside { width: 100%; }
-      nav { display: flex; overflow-x: auto; }
-      nav a { white-space: nowrap; }
-      main { padding: 18px; }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SANTIAGO | Owner Dashboard</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:#f5f6fb;color:#17213b}
+.layout{display:flex;min-height:100vh}
+aside{width:235px;flex-shrink:0;background:#111b36;color:white;padding:25px 17px}
+.brand{font-size:24px;font-weight:800;letter-spacing:2px}
+.admin-label{font-size:11px;color:#aebbd8;margin:8px 0 28px}
+nav a{display:block;color:#dce3f7;text-decoration:none;padding:13px;border-radius:9px;margin:5px 0;font-size:14px}
+nav a:hover,nav a.active{background:#29385e}
+main{flex:1;min-width:0;padding:28px}
+header{display:flex;justify-content:space-between;align-items:center;gap:15px;flex-wrap:wrap;margin-bottom:25px}
+h1{font-size:26px;margin:0 0 7px}
+h2{font-size:19px;margin:0 0 17px}
+.muted{color:#78839d;font-size:13px}
+button{border:0;border-radius:8px;padding:11px 15px;background:#29385e;color:white;cursor:pointer}
+button:disabled{opacity:.5;cursor:not-allowed}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(165px,1fr));gap:15px}
+.card,.panel{background:white;border:1px solid #e8eaf1;border-radius:14px;padding:20px}
+.card h3{font-size:13px;color:#78839d;margin:0 0 12px}
+.value{font-size:25px;font-weight:700}
+.panel{margin-top:22px}
+.form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.field{display:flex;flex-direction:column;gap:7px}
+.field.full{grid-column:1/-1}
+label{font-size:13px;font-weight:600;color:#46516a}
+input,select{width:100%;padding:12px;border:1px solid #dfe3ed;border-radius:8px;background:white;color:#17213b;font-size:14px}
+input:focus,select:focus{outline:2px solid #c8d2ef;border-color:#7285bd}
+.actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:17px}
+.secondary{background:#edf0f7;color:#29385e}
+.danger{background:#a33b48}
+.table-wrap{overflow-x:auto}
+table{border-collapse:collapse;width:100%;min-width:650px;font-size:13px}
+th,td{text-align:left;padding:12px 10px;border-bottom:1px solid #edf0f5}
+th{color:#78839d;font-weight:600}
+.message{padding:12px;border-radius:9px;background:#f0f2f8;color:#46516a;margin:14px 0;font-size:13px}
+.hidden{display:none!important}
+.status{padding:5px 8px;border-radius:20px;background:#e7f6ed;color:#28764a;font-size:11px}
+.status.off{background:#fff0ef;color:#a33b48}
+.small-btn{padding:7px 10px;font-size:12px}
+#accessMessage{max-width:500px;margin:100px auto;text-align:center}
+@media(max-width:750px){
+.layout{display:block}
+aside{width:100%}
+nav{display:flex;overflow-x:auto}
+nav a{white-space:nowrap}
+main{padding:17px}
+.form-grid{grid-template-columns:1fr}
+.field.full{grid-column:auto}
+}
+</style>
 </head>
 <body>
 
 <div id="accessMessage" class="panel">Checking administrator access...</div>
 
 <div class="layout hidden" id="dashboard">
-  <aside>
-    <div class="brand">SANTIAGO</div>
-    <div class="admin-label">OWNER CONTROL PANEL</div>
-    <nav>
-      <a class="active" href="#overview">Dashboard</a>
-      <a href="#customers">Customers</a>
-      <a href="#orders">Orders</a>
-      <a href="#wallet">Wallet</a>
-    </nav>
-  </aside>
+<aside>
+  <div class="brand">SANTIAGO</div>
+  <div class="admin-label">OWNER CONTROL PANEL</div>
+  <nav>
+    <a class="active" href="#overview">Dashboard</a>
+    <a href="#customers">Customers</a>
+    <a href="#orders">Orders</a>
+    <a href="#services">Service Management</a>
+    <a href="#wallet">Wallet</a>
+  </nav>
+</aside>
 
-  <main>
-    <header>
-      <div>
-        <h1>Dashboard Overview</h1>
-        <div class="muted" id="adminEmail">Owner account</div>
-      </div>
-      <button id="logoutBtn">Log out</button>
-    </header>
+<main>
+<header>
+  <div>
+    <h1>Owner Dashboard</h1>
+    <div class="muted" id="adminEmail">Administrator</div>
+  </div>
+  <button id="logoutBtn">Log out</button>
+</header>
 
-    <div id="notice" class="message hidden"></div>
+<div id="notice" class="message hidden"></div>
 
-    <section id="overview" class="cards">
-      <div class="card">
-        <h3>Total Customers</h3>
-        <div class="value" id="customerCount">—</div>
-      </div>
-      <div class="card">
-        <h3>Total Orders</h3>
-        <div class="value" id="orderCount">—</div>
-      </div>
-      <div class="card">
-        <h3>Pending Orders</h3>
-        <div class="value" id="pendingCount">—</div>
-      </div>
-      <div class="card">
-        <h3>Revenue</h3>
-        <div class="value">Not connected</div>
-      </div>
-    </section>
+<section id="overview" class="cards">
+  <div class="card">
+    <h3>Total Customers</h3>
+    <div class="value" id="customerCount">—</div>
+  </div>
+  <div class="card">
+    <h3>Total Orders</h3>
+    <div class="value" id="orderCount">—</div>
+  </div>
+  <div class="card">
+    <h3>Pending Orders</h3>
+    <div class="value" id="pendingCount">—</div>
+  </div>
+  <div class="card">
+    <h3>Active Services</h3>
+    <div class="value" id="serviceCount">—</div>
+  </div>
+</section>
 
-    <section class="panel" id="customers">
-      <h2>Registered Customers</h2>
-      <div class="muted">Latest customer profiles</div>
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>Email</th>
-              <th>Registration date</th>
-            </tr>
-          </thead>
-          <tbody id="customerRows">
-            <tr><td colspan="2">Loading customers...</td></tr>
-          </tbody>
-        </table>
-      </div>
-    </section>
+<section class="panel" id="customers">
+  <h2>Registered Customers</h2>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Email</th><th>Registration date</th></tr></thead>
+      <tbody id="customerRows"><tr><td colspan="2">Loading...</td></tr></tbody>
+    </table>
+  </div>
+</section>
 
-    <section class="panel" id="orders">
-      <h2>Order Management</h2>
-      <div class="muted">Review customer orders and update their status.</div>
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>Order ID</th>
-              <th>Customer</th>
-              <th>Type</th>
-              <th>Service</th>
-              <th>Amount</th>
-              <th>Status</th>
-              <th>Update</th>
-            </tr>
-          </thead>
-          <tbody id="orderRows">
-            <tr><td colspan="7">Loading orders...</td></tr>
-          </tbody>
-        </table>
-      </div>
-    </section>
+<section class="panel" id="orders">
+  <h2>Order Management</h2>
+  <div class="muted">Order records will appear here when customer ordering is connected.</div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>Order ID</th><th>Customer ID</th><th>Type</th><th>Service</th><th>Amount</th><th>Status</th><th>Update</th></tr>
+      </thead>
+      <tbody id="orderRows"><tr><td colspan="7">Loading...</td></tr></tbody>
+    </table>
+  </div>
+</section>
 
-    <section class="panel" id="wallet">
-      <h2>Wallet Management</h2>
-      <p class="muted">
-        Wallet deposits, withdrawals, balances and revenue will be connected
-        after we build the secure wallet and transaction system.
-      </p>
-    </section>
-  </main>
+<section class="panel" id="services">
+  <h2>Service Management</h2>
+  <p class="muted">Add and manage the catalogue displayed to customers.</p>
+
+  <form id="serviceForm">
+    <div class="form-grid">
+      <div class="field">
+        <label for="category">Service category</label>
+        <select id="category" required>
+          <option value="virtual_number">Virtual Numbers</option>
+          <option value="social_boosting">Social Media Boosting</option>
+        </select>
+      </div>
+
+      <div class="field" id="platformField">
+        <label for="platform">Platform</label>
+        <select id="platform">
+          <option value="">Choose platform</option>
+          <option>WhatsApp</option>
+          <option>Telegram</option>
+          <option>Facebook</option>
+          <option>Instagram</option>
+          <option>TikTok</option>
+          <option>YouTube</option>
+          <option>Google</option>
+          <option>X</option>
+        </select>
+      </div>
+
+      <div class="field" id="countryField">
+        <label for="country">Country name</label>
+        <input id="country" placeholder="e.g. Nigeria">
+      </div>
+
+      <div class="field" id="countryCodeField">
+        <label for="countryCode">Country code</label>
+        <input id="countryCode" placeholder="e.g. NG">
+      </div>
+
+      <div class="field">
+        <label for="serviceName">Service name</label>
+        <input id="serviceName" required placeholder="e.g. WhatsApp Number or Instagram Followers">
+      </div>
+
+      <div class="field">
+        <label for="price">Customer price (NGN ₦)</label>
+        <input id="price" type="number" min="0" step="0.01" required placeholder="e.g. 2500">
+      </div>
+
+      <div class="field" id="minField">
+        <label for="minQuantity">Minimum quantity</label>
+        <input id="minQuantity" type="number" min="1" placeholder="e.g. 100">
+      </div>
+
+      <div class="field" id="maxField">
+        <label for="maxQuantity">Maximum quantity</label>
+        <input id="maxQuantity" type="number" min="1" placeholder="e.g. 10000">
+      </div>
+
+      <div class="field full">
+        <label for="description">Description (optional)</label>
+        <input id="description" placeholder="Short description of this service">
+      </div>
+    </div>
+
+    <div class="actions">
+      <button type="submit" id="saveServiceBtn">Add service</button>
+      <button type="button" class="secondary" id="cancelEditBtn">Clear form</button>
+    </div>
+  </form>
+
+  <div class="message">
+    Prices are your proposed customer prices, not verified supplier prices.
+    Adding a catalogue item does not activate supplier fulfilment.
+  </div>
+
+  <h2 style="margin-top:28px">Your Service Catalogue</h2>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Category</th><th>Platform</th><th>Country</th>
+          <th>Service</th><th>Price</th><th>Status</th><th>Action</th>
+        </tr>
+      </thead>
+      <tbody id="serviceRows">
+        <tr><td colspan="7">Loading services...</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="panel" id="wallet">
+  <h2>Wallet Management</h2>
+  <p class="muted">
+    Wallet balances, deposit review and withdrawals will be connected
+    after secure payment and transaction processing is implemented.
+  </p>
+</section>
+
+</main>
 </div>
 
 <script>
-  const SUPABASE_URL = "https://anzrwkwyjcdessheviyw.supabase.co";
-  const SUPABASE_KEY = "sb_publishable_txD8O7D0v34s59Z2p-nqaA_6ur0PFFX";
+const SUPABASE_URL = "https://anzrwkwyjcdessheviyw.supabase.co";
+const SUPABASE_KEY = "sb_publishable_txD8O7D0v34s59Z2p-nqaA_6ur0PFFX";
 
-  const db = window.supabase.createClient(
-    SUPABASE_URL,
-    SUPABASE_KEY
-  );
+const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-  const accessMessage = document.getElementById("accessMessage");
-  const dashboard = document.getElementById("dashboard");
-  const notice = document.getElementById("notice");
+const accessMessage = document.getElementById("accessMessage");
+const dashboard = document.getElementById("dashboard");
+const notice = document.getElementById("notice");
 
-  function showNotice(message) {
-    notice.textContent = message;
-    notice.classList.remove("hidden");
-  }
+let editingServiceId = null;
 
-  function safeText(value) {
-    return String(value ?? "").replace(/[&<>"']/g, character => ({
-      "&": "&amp;",
-      "<": "&lt;",
-      ">": "&gt;",
-      '"': "&quot;",
-      "'": "&#039;"
-    })[character]);
-  }
+function showNotice(message) {
+  notice.textContent = message;
+  notice.classList.remove("hidden");
+}
 
-  function formatDate(value) {
-    if (!value) return "—";
-    return new Date(value).toLocaleDateString();
-  }
+function safeText(value) {
+  return String(value ?? "").replace(/[&<>"']/g, character => ({
+    "&": "&amp;", "<": "&lt;", ">": "&gt;",
+    '"': "&quot;", "'": "&#039;"
+  })[character]);
+}
 
-  async function checkAdmin() {
-    const { data: sessionData, error: sessionError } =
-      await db.auth.getSession();
+function formatDate(value) {
+  return value ? new Date(value).toLocaleDateString() : "—";
+}
 
-    const session = sessionData?.session;
+function updateCategoryFields() {
+  const category = document.getElementById("category").value;
+  const isNumber = category === "virtual_number";
 
-    if (sessionError || !session) {
-      window.location.replace("auth.html");
-      return;
-    }
+  document.getElementById("platformField").classList.toggle("hidden", isNumber);
+  document.getElementById("countryField").classList.toggle("hidden", !isNumber);
+  document.getElementById("countryCodeField").classList.toggle("hidden", !isNumber);
+  document.getElementById("minField").classList.toggle("hidden", isNumber);
+  document.getElementById("maxField").classList.toggle("hidden", isNumber);
 
-    const { data: admin, error: adminError } = await db
-      .from("admin_users")
-      .select("user_id")
-      .eq("user_id", session.user.id)
-      .maybeSingle();
+  document.getElementById("platform").required = !isNumber;
+  document.getElementById("country").required = isNumber;
+  document.getElementById("countryCode").required = isNumber;
+}
 
-    if (adminError || !admin) {
-      accessMessage.textContent = "Access denied. This account is not an administrator.";
-      await db.auth.signOut();
-      setTimeout(() => window.location.replace("auth.html"), 2000);
-      return;
-    }
+function clearServiceForm() {
+  editingServiceId = null;
+  document.getElementById("serviceForm").reset();
+  document.getElementById("saveServiceBtn").textContent = "Add service";
+  updateCategoryFields();
+}
 
-    document.getElementById("adminEmail").textContent =
-      session.user.email || "Owner account";
+async function checkAdmin() {
+  const { data, error } = await db.auth.getSession();
+  const session = data?.session;
 
-    accessMessage.classList.add("hidden");
-    dashboard.classList.remove("hidden");
-
-    await loadDashboard();
-  }
-
-  async function loadDashboard() {
-    const [customersResult, ordersResult, pendingResult] =
-      await Promise.all([
-        db.from("profiles").select("id", { count: "exact", head: true }),
-        db.from("orders").select("id", { count: "exact", head: true }),
-        db.from("orders").select("id", { count: "exact", head: true })
-          .eq("status", "pending")
-      ]);
-
-    if (customersResult.error || ordersResult.error || pendingResult.error) {
-      showNotice(
-        "Some dashboard data could not load. Check your Supabase table permissions."
-      );
-    }
-
-    document.getElementById("customerCount").textContent =
-      customersResult.error ? "Error" : customersResult.count ?? 0;
-
-    document.getElementById("orderCount").textContent =
-      ordersResult.error ? "Error" : ordersResult.count ?? 0;
-
-    document.getElementById("pendingCount").textContent =
-      pendingResult.error ? "Error" : pendingResult.count ?? 0;
-
-    await loadCustomers();
-    await loadOrders();
-  }
-
-  async function loadCustomers() {
-    const body = document.getElementById("customerRows");
-
-    const { data, error } = await db
-      .from("profiles")
-      .select("email, created_at")
-      .order("created_at", { ascending: false })
-      .limit(50);
-
-    if (error) {
-      body.innerHTML = "<tr><td colspan='2'>Could not load customers.</td></tr>";
-      return;
-    }
-
-    if (!data || data.length === 0) {
-      body.innerHTML = "<tr><td colspan='2'>No customer profiles found yet.</td></tr>";
-      return;
-    }
-
-    body.innerHTML = data.map(customer => `
-      <tr>
-        <td>${safeText(customer.email)}</td>
-        <td>${safeText(formatDate(customer.created_at))}</td>
-      </tr>
-    `).join("");
-  }
-
-  async function loadOrders() {
-    const body = document.getElementById("orderRows");
-
-    const { data, error } = await db
-      .from("orders")
-      .select("id, user_id, order_type, service_name, amount, currency, status")
-      .order("created_at", { ascending: false })
-      .limit(50);
-
-    if (error) {
-      body.innerHTML = "<tr><td colspan='7'>Could not load orders.</td></tr>";
-      return;
-    }
-
-    if (!data || data.length === 0) {
-      body.innerHTML = "<tr><td colspan='7'>No orders have been placed yet.</td></tr>";
-      return;
-    }
-
-    body.innerHTML = data.map(order => `
-      <tr>
-        <td>${safeText(order.id.slice(0, 8))}</td>
-        <td>${safeText(order.user_id.slice(0, 8))}</td>
-        <td>${safeText(order.order_type)}</td>
-        <td>${safeText(order.service_name)}</td>
-        <td>${safeText(order.currency)} ${safeText(order.amount)}</td>
-        <td>${safeText(order.status)}</td>
-        <td>
-          <select data-order-id="${safeText(order.id)}" class="statusSelect">
-            ${["pending", "processing", "completed", "cancelled", "failed"]
-              .map(status => `
-                <option value="${status}" ${order.status === status ? "selected" : ""}>
-                  ${status}
-                </option>
-              `).join("")}
-          </select>
-          <button class="saveStatus" data-order-id="${safeText(order.id)}">
-            Save
-          </button>
-        </td>
-      </tr>
-    `).join("");
-
-    document.querySelectorAll(".saveStatus").forEach(button => {
-      button.addEventListener("click", () => updateOrderStatus(button.dataset.orderId));
-    });
-  }
-
-  async function updateOrderStatus(orderId) {
-    const select = document.querySelector(
-      `.statusSelect[data-order-id="${CSS.escape(orderId)}"]`
-    );
-
-    if (!select) return;
-
-    const allowedStatuses = [
-      "pending", "processing", "completed", "cancelled", "failed"
-    ];
-
-    if (!allowedStatuses.includes(select.value)) return;
-
-    const { error } = await db
-      .from("orders")
-      .update({
-        status: select.value,
-        updated_at: new Date().toISOString()
-      })
-      .eq("id", orderId);
-
-    if (error) {
-      showNotice("Could not update order status: " + error.message);
-      return;
-    }
-
-    showNotice("Order status updated successfully.");
-    await loadDashboard();
-  }
-
-  document.getElementById("logoutBtn").addEventListener("click", async () => {
-    await db.auth.signOut();
+  if (error || !session) {
     window.location.replace("auth.html");
+    return;
+  }
+
+  const { data: admin, error: adminError } = await db
+    .from("admin_users")
+    .select("user_id")
+    .eq("user_id", session.user.id)
+    .maybeSingle();
+
+  if (adminError || !admin) {
+    accessMessage.textContent = "Access denied. This account is not an administrator.";
+    await db.auth.signOut();
+    setTimeout(() => window.location.replace("auth.html"), 2000);
+    return;
+  }
+
+  document.getElementById("adminEmail").textContent = session.user.email;
+  accessMessage.classList.add("hidden");
+  dashboard.classList.remove("hidden");
+
+  await loadDashboard();
+}
+
+async function loadDashboard() {
+  const [customers, orders, pending, services] = await Promise.all([
+    db.from("profiles").select("id", {count:"exact",head:true}),
+    db.from("orders").select("id", {count:"exact",head:true}),
+    db.from("orders").select("id", {count:"exact",head:true}).eq("status","pending"),
+    db.from("service_catalog").select("id", {count:"exact",head:true}).eq("is_active",true)
+  ]);
+
+  document.getElementById("customerCount").textContent =
+    customers.error ? "Error" : customers.count ?? 0;
+  document.getElementById("orderCount").textContent =
+    orders.error ? "Error" : orders.count ?? 0;
+  document.getElementById("pendingCount").textContent =
+    pending.error ? "Error" : pending.count ?? 0;
+  document.getElementById("serviceCount").textContent =
+    services.error ? "Error" : services.count ?? 0;
+
+  if (customers.error || orders.error || pending.error || services.error) {
+    showNotice("Some dashboard statistics could not load. Check database permissions.");
+  }
+
+  await Promise.all([loadCustomers(), loadOrders(), loadServices()]);
+}
+
+async function loadCustomers() {
+  const body = document.getElementById("customerRows");
+  const {data,error} = await db.from("profiles")
+    .select("email,created_at")
+    .order("created_at",{ascending:false})
+    .limit(50);
+
+  if(error) {
+    body.innerHTML = "<tr><td colspan='2'>Could not load customers.</td></tr>";
+    return;
+  }
+
+  if(!data?.length) {
+    body.innerHTML = "<tr><td colspan='2'>No customers found.</td></tr>";
+    return;
+  }
+
+  body.innerHTML = data.map(item => `
+    <tr><td>${safeText(item.email)}</td><td>${safeText(formatDate(item.created_at))}</td></tr>
+  `).join("");
+}
+
+async function loadOrders() {
+  const body = document.getElementById("orderRows");
+  const {data,error} = await db.from("orders")
+    .select("id,user_id,order_type,service_name,amount,currency,status")
+    .order("created_at",{ascending:false})
+    .limit(50);
+
+  if(error) {
+    body.innerHTML = "<tr><td colspan='7'>Could not load orders.</td></tr>";
+    return;
+  }
+
+  if(!data?.length) {
+    body.innerHTML = "<tr><td colspan='7'>No orders found yet.</td></tr>";
+    return;
+  }
+
+  body.innerHTML = data.map(order => `
+    <tr>
+      <td>${safeText(order.id.slice(0,8))}</td>
+      <td>${safeText(order.user_id.slice(0,8))}</td>
+      <td>${safeText(order.order_type)}</td>
+      <td>${safeText(order.service_name)}</td>
+      <td>${safeText(order.currency)} ${safeText(order.amount)}</td>
+      <td>${safeText(order.status)}</td>
+      <td>
+        <select class="statusSelect" data-id="${safeText(order.id)}">
+          ${["pending","processing","completed","cancelled","failed"].map(status =>
+            `<option value="${status}" ${order.status===status?"selected":""}>${status}</option>`
+          ).join("")}
+        </select>
+        <button class="small-btn saveOrder" data-id="${safeText(order.id)}">Save</button>
+      </td>
+    </tr>
+  `).join("");
+
+  document.querySelectorAll(".saveOrder").forEach(button => {
+    button.addEventListener("click", () => updateOrder(button.dataset.id));
+  });
+}
+
+async function updateOrder(id) {
+  const select = document.querySelector(`.statusSelect[data-id="${CSS.escape(id)}"]`);
+  if(!select) return;
+
+  const {error} = await db.from("orders")
+    .update({status:select.value,updated_at:new Date().toISOString()})
+    .eq("id",id);
+
+  if(error) {
+    showNotice("Order update failed: " + error.message);
+    return;
+  }
+
+  showNotice("Order status updated.");
+  await loadDashboard();
+}
+
+async function loadServices() {
+  const body = document.getElementById("serviceRows");
+  const {data,error} = await db.from("service_catalog")
+    .select("*")
+    .order("created_at",{ascending:false})
+    .limit(100);
+
+  if(error) {
+    body.innerHTML = "<tr><td colspan='7'>Could not load services: " +
+      safeText(error.message) + "</td></tr>";
+    return;
+  }
+
+  if(!data?.length) {
+    body.innerHTML = "<tr><td colspan='7'>No services added yet.</td></tr>";
+    return;
+  }
+
+  body.innerHTML = data.map(item => `
+    <tr>
+      <td>${safeText(item.category)}</td>
+      <td>${safeText(item.platform || "—")}</td>
+      <td>${safeText(item.country_name || "—")}</td>
+      <td>${safeText(item.service_name)}</td>
+      <td>₦${safeText(Number(item.price).toLocaleString("en-NG"))}</td>
+      <td><span class="status ${item.is_active ? "" : "off"}">${item.is_active ? "Active" : "Inactive"}</span></td>
+      <td>
+        <button class="small-btn secondary editService" data-id="${safeText(item.id)}">Edit</button>
+        <button class="small-btn toggleService" data-id="${safeText(item.id)}" data-active="${item.is_active}">
+          ${item.is_active ? "Deactivate" : "Activate"}
+        </button>
+      </td>
+    </tr>
+  `).join("");
+
+  document.querySelectorAll(".editService").forEach(button => {
+    button.addEventListener("click", () => editService(button.dataset.id));
   });
 
-  checkAdmin();
+  document.querySelectorAll(".toggleService").forEach(button => {
+    button.addEventListener("click", () =>
+      toggleService(button.dataset.id, button.dataset.active === "true")
+    );
+  });
+}
+
+document.getElementById("serviceForm").addEventListener("submit", async event => {
+  event.preventDefault();
+
+  const category = document.getElementById("category").value;
+  const price = Number(document.getElementById("price").value);
+  const name = document.getElementById("serviceName").value.trim();
+
+  if(!name || !Number.isFinite(price) || price < 0) {
+    showNotice("Enter a valid service name and price.");
+    return;
+  }
+
+  const minValue = document.getElementById("minQuantity").value;
+  const maxValue = document.getElementById("maxQuantity").value;
+  const min = minValue ? Number(minValue) : null;
+  const max = maxValue ? Number(maxValue) : null;
+
+  if(category === "social_boosting" &&
+     ((min !== null && (!Number.isInteger(min) || min < 1)) ||
+      (max !== null && (!Number.isInteger(max) || max < 1)) ||
+      (min !== null && max !== null && max < min))) {
+    showNotice("Check the minimum and maximum quantities.");
+    return;
+  }
+
+  const record = {
+    category,
+    platform: category === "social_boosting"
+      ? document.getElementById("platform").value : null,
+    country_name: category === "virtual_number"
+      ? document.getElementById("country").value.trim() : null,
+    country_code: category === "virtual_number"
+      ? document.getElementById("countryCode").value.trim().toUpperCase() : null,
+    service_name: name,
+    price,
+    min_quantity: category === "social_boosting" ? min : null,
+    max_quantity: category === "social_boosting" ? max : null,
+    description: document.getElementById("description").value.trim() || null
+  };
+
+  const button = document.getElementById("saveServiceBtn");
+  button.disabled = true;
+
+  let result;
+
+  if(editingServiceId) {
+    result = await db.from("service_catalog")
+      .update({...record,updated_at:new Date().toISOString()})
+      .eq("id",editingServiceId);
+  } else {
+    result = await db.from("service_catalog").insert(record);
+  }
+
+  button.disabled = false;
+
+  if(result.error) {
+    showNotice("Could not save service: " + result.error.message);
+    return;
+  }
+
+  showNotice(editingServiceId ? "Service updated successfully." : "Service added successfully.");
+  clearServiceForm();
+  await loadDashboard();
+});
+
+async function editService(id) {
+  const {data,error} = await db.from("service_catalog")
+    .select("*").eq("id",id).single();
+
+  if(error || !data) {
+    showNotice("Could not open this service for editing.");
+    return;
+  }
+
+  editingServiceId = id;
+  document.getElementById("category").value = data.category;
+  updateCategoryFields();
+  document.getElementById("platform").value = data.platform || "";
+  document.getElementById("country").value = data.country_name || "";
+  document.getElementById("countryCode").value = data.country_code || "";
+  document.getElementById("serviceName").value = data.service_name || "";
+  document.getElementById("price").value = data.price;
+  document.getElementById("minQuantity").value = data.min_quantity || "";
+  document.getElementById("maxQuantity").value = data.max_quantity || "";
+  document.getElementById("description").value = data.description || "";
+  document.getElementById("saveServiceBtn").textContent = "Save changes";
+  document.getElementById("services").scrollIntoView({behavior:"smooth"});
+}
+
+async function toggleService(id, currentlyActive) {
+  const {error} = await db.from("service_catalog")
+    .update({is_active:!currentlyActive,updated_at:new Date().toISOString()})
+    .eq("id",id);
+
+  if(error) {
+    showNotice("Could not change service status: " + error.message);
+    return;
+  }
+
+  showNotice(currentlyActive ? "Service deactivated." : "Service activated.");
+  await loadDashboard();
+}
+
+document.getElementById("category").addEventListener("change",updateCategoryFields);
+document.getElementById("cancelEditBtn").addEventListener("click",clearServiceForm);
+
+document.getElementById("logoutBtn").addEventListener("click",async()=>{
+  await db.auth.signOut();
+  window.location.replace("auth.html");
+});
+
+updateCategoryFields();
+checkAdmin();
 </script>
 </body>
 </html>
