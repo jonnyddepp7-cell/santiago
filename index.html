@@ -1,0 +1,274 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SANTIAGO | Digital Services</title>
+<style>
+:root {
+  --navy:#172440;
+  --purple:#7658db;
+  --light:#f6f5fc;
+  --muted:#858ba0;
+  --border:#e8e7f0;
+  --white:#fff;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:Inter,Arial,sans-serif;
+  background:#f7f8fc;color:var(--navy);
+}
+button,input,select{font:inherit}
+.layout{display:flex;min-height:100vh}
+.sidebar{
+  width:245px;background:#fff;border-right:1px solid var(--border);
+  padding:28px 18px;flex-shrink:0;
+}
+.brand{font-size:23px;font-weight:900;letter-spacing:2px;margin:5px 12px 38px}
+.brand span{color:var(--purple)}
+.nav-label{font-size:10px;color:#a2a5b2;font-weight:800;margin:25px 12px 10px;letter-spacing:1.5px}
+.nav-item{
+  padding:13px 14px;border-radius:10px;margin:5px 0;
+  cursor:pointer;color:#737b91;font-size:14px;
+}
+.nav-item.active{background:#f0edff;color:var(--purple);font-weight:700}
+.main{flex:1;min-width:0;padding:30px 38px}
+.topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:35px}
+.topbar h2{font-size:21px}
+.profile{background:white;border:1px solid var(--border);padding:10px 15px;border-radius:12px;font-size:13px}
+.welcome{margin-bottom:26px}
+.welcome h1{font-size:27px;margin-bottom:8px}
+.welcome p{color:var(--muted);font-size:14px}
+.tabs{display:flex;gap:10px;margin-bottom:22px;flex-wrap:wrap}
+.tab{
+  border:1px solid var(--border);background:white;color:#777;
+  padding:12px 20px;border-radius:10px;cursor:pointer;font-weight:700;
+}
+.tab.active{background:var(--navy);color:white;border-color:var(--navy)}
+.card{
+  background:white;border:1px solid var(--border);border-radius:17px;
+  padding:25px;max-width:850px;box-shadow:0 5px 22px #202b4510;
+}
+.card h3{font-size:18px;margin-bottom:7px}
+.sub{color:var(--muted);font-size:13px;margin-bottom:25px}
+.provider{display:flex;gap:9px;margin-bottom:22px}
+.provider button{
+  padding:10px 20px;border:1px solid var(--border);background:white;
+  border-radius:9px;cursor:pointer;color:#777;
+}
+.provider button.active{background:#f0edff;border-color:var(--purple);color:var(--purple);font-weight:700}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:19px}
+.field{display:flex;flex-direction:column;gap:9px}
+.field.full{grid-column:1/-1}
+label{font-size:13px;font-weight:700}
+select,input{
+  width:100%;padding:14px;border:1px solid var(--border);
+  border-radius:10px;background:#fff;color:var(--navy);outline:none;
+}
+select:focus,input:focus{border-color:var(--purple);box-shadow:0 0 0 3px #7658db18}
+select:disabled{background:#f6f6f9;color:#aaa}
+.summary{
+  background:#f8f7fc;border:1px solid var(--border);
+  padding:18px;border-radius:12px;margin-top:23px;
+}
+.summary-row{display:flex;justify-content:space-between;gap:12px;margin:8px 0;font-size:13px}
+.summary-row span{color:var(--muted)}
+.action{
+  width:100%;border:0;border-radius:10px;background:var(--purple);
+  color:white;font-weight:800;padding:16px;margin-top:19px;cursor:pointer;
+}
+.action:disabled{opacity:.45;cursor:not-allowed}
+.history{margin-top:28px;max-width:850px;background:white;border:1px solid var(--border);border-radius:15px;padding:22px}
+.history h3{margin-bottom:10px}
+.history p{color:var(--muted);font-size:13px}
+.hidden{display:none}
+.notice{font-size:12px;color:var(--muted);margin-top:12px;line-height:1.6}
+@media(max-width:760px){
+ .sidebar{display:none}
+ .main{padding:20px 14px}
+ .topbar{margin-bottom:27px}
+ .welcome h1{font-size:23px}
+ .card{padding:18px}
+ .form-grid{grid-template-columns:1fr}
+ .field.full{grid-column:auto}
+}
+</style>
+</head>
+<body>
+<div class="layout">
+  <aside class="sidebar">
+    <div class="brand">SANTIAGO<span>.</span></div>
+    <div class="nav-label">MAIN MENU</div>
+    <div class="nav-item active" onclick="showSection('orders',this)">▦ &nbsp; Place an order</div>
+    <div class="nav-item" onclick="showSection('history',this)">◷ &nbsp; Order history</div>
+    <div class="nav-item" onclick="alert('Wallet will be connected in a later step.')">◈ &nbsp; My wallet</div>
+    <div class="nav-label">ACCOUNT</div>
+    <div class="nav-item" onclick="alert('Account settings coming soon.')">⚙ &nbsp; Settings</div>
+    <div class="nav-item" onclick="alert('Support coming soon.')">? &nbsp; Help & support</div>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <h2>Dashboard</h2>
+      <div class="profile">Welcome, Customer 👋</div>
+    </header>
+
+    <section class="welcome">
+      <h1>Place an order</h1>
+      <p>Choose a service and configure your order below.</p>
+    </section>
+
+    <div class="tabs">
+      <button class="tab active" id="numberTab" onclick="switchTab('numbers')">Virtual Numbers</button>
+      <button class="tab" id="boostTab" onclick="switchTab('boost')">Social Media Boosting</button>
+    </div>
+
+    <section class="card" id="orderCard">
+      <h3 id="formTitle">Virtual Number Order</h3>
+      <p class="sub" id="formSubtitle">Get virtual numbers for your preferred platform.</p>
+
+      <div id="providerBox">
+        <label>Number provider</label>
+        <div class="provider">
+          <button class="active" onclick="selectProvider(this)">Prime</button>
+          <button onclick="selectProvider(this)">Alternate</button>
+        </div>
+      </div>
+
+      <div class="form-grid">
+        <div class="field" id="countryField">
+          <label>Select country</label>
+          <select id="country">
+            <option value="">Choose a country</option>
+            <option>🇺🇸 United States</option>
+            <option>🇬🇧 United Kingdom</option>
+            <option>🇨🇦 Canada</option>
+            <option>🇳🇬 Nigeria</option>
+            <option>🇮🇳 India</option>
+            <option>🇩🇪 Germany</option>
+            <option>🇫🇷 France</option>
+            <option>🇿🇦 South Africa</option>
+            <option>🇦🇺 Australia</option>
+            <option>Other countries</option>
+          </select>
+        </div>
+
+        <div class="field" id="platformField">
+          <label id="serviceLabel">Select service</label>
+          <select id="service">
+            <option value="">Choose a service</option>
+            <option>WhatsApp</option>
+            <option>Telegram</option>
+            <option>Facebook</option>
+            <option>Instagram</option>
+            <option>TikTok</option>
+            <option>Google</option>
+          </select>
+        </div>
+
+        <div class="field full hidden" id="linkField">
+          <label>Post or profile link</label>
+          <input id="link" type="url" placeholder="Paste your social media link">
+        </div>
+
+        <div class="field full hidden" id="quantityField">
+          <label>Quantity</label>
+          <input id="quantity" type="number" min="1" placeholder="Enter quantity">
+        </div>
+      </div>
+
+      <div class="summary">
+        <div class="summary-row"><span>Selected country</span><strong id="countrySummary">Not selected</strong></div>
+        <div class="summary-row"><span>Selected service</span><strong id="serviceSummary">Not selected</strong></div>
+        <div class="summary-row"><span>Payable amount</span><strong>Awaiting supplier price</strong></div>
+        <div class="summary-row"><span>Available stock</span><strong>Not connected</strong></div>
+      </div>
+
+      <button class="action" id="orderButton" disabled onclick="placeOrder()">Select your options to continue</button>
+      <p class="notice">Prices, availability, payments and order processing will be connected to verified suppliers in the next development steps.</p>
+    </section>
+
+    <section class="history hidden" id="historySection">
+      <h3>Order history</h3>
+      <p>Your completed and pending orders will appear here after database integration.</p>
+    </section>
+  </main>
+</div>
+
+<script>
+let currentTab = "numbers";
+
+const serviceOptions = {
+  Instagram:["Followers","Likes","Views","Comments"],
+  TikTok:["Followers","Likes","Views","Shares"],
+  Facebook:["Followers","Likes","Views","Comments"],
+  YouTube:["Subscribers","Views","Likes","Watch time"],
+  Telegram:["Members","Post views","Reactions"],
+  "X (Twitter)":["Followers","Likes","Views","Reposts"]
+};
+
+function showSection(section,element){
+  document.querySelectorAll(".nav-item").forEach(item=>item.classList.remove("active"));
+  element.classList.add("active");
+  document.getElementById("orderCard").classList.toggle("hidden",section!=="orders");
+  document.getElementById("orderCard").previousElementSibling.classList.toggle("hidden",section!=="orders");
+  document.getElementById("historySection").classList.toggle("hidden",section!=="history");
+}
+
+function switchTab(tab){
+  currentTab=tab;
+  document.getElementById("numberTab").classList.toggle("active",tab==="numbers");
+  document.getElementById("boostTab").classList.toggle("active",tab==="boost");
+  document.getElementById("formTitle").textContent=tab==="numbers"?"Virtual Number Order":"Social Media Boosting Order";
+  document.getElementById("formSubtitle").textContent=tab==="numbers"?"Get virtual numbers for your preferred platform.":"Grow your social media with a service of your choice.";
+  document.getElementById("providerBox").classList.toggle("hidden",tab==="boost");
+  document.getElementById("countryField").classList.toggle("hidden",tab==="boost");
+  document.getElementById("linkField").classList.toggle("hidden",tab!=="boost");
+  document.getElementById("quantityField").classList.toggle("hidden",tab!=="boost");
+  document.getElementById("serviceLabel").textContent=tab==="numbers"?"Select service":"Select platform";
+  const service=document.getElementById("service");
+  service.innerHTML='<option value="">Choose '+(tab==="numbers"?"a service":"a platform")+'</option>';
+  const options=tab==="numbers"?["WhatsApp","Telegram","Facebook","Instagram","TikTok","Google"]:Object.keys(serviceOptions);
+  options.forEach(option=>service.add(new Option(option,option)));
+  updateSummary();
+}
+
+function selectProvider(button){
+  document.querySelectorAll(".provider button").forEach(b=>b.classList.remove("active"));
+  button.classList.add("active");
+}
+
+function updateSummary(){
+  const country=document.getElementById("country").value;
+  const service=document.getElementById("service").value;
+  document.getElementById("countrySummary").textContent=currentTab==="numbers"?(country||"Not selected"):"Not required";
+  document.getElementById("serviceSummary").textContent=service||"Not selected";
+  const valid=currentTab==="numbers"?Boolean(country&&service):Boolean(service&&document.getElementById("link").value.trim()&&Number(document.getElementById("quantity").value)>0);
+  document.getElementById("orderButton").disabled=!valid;
+  document.getElementById("orderButton").textContent=valid?"Continue":"Select your options to continue";
+}
+
+document.getElementById("country").addEventListener("change",updateSummary);
+document.getElementById("service").addEventListener("change",()=>{
+  const service=document.getElementById("service").value;
+  if(currentTab==="boost"&&service){
+    const select=document.getElementById("service");
+    select.innerHTML='<option value="">Choose a service</option>';
+    serviceOptions[service].forEach(option=>select.add(new Option(option,option)));
+    document.getElementById("serviceLabel").textContent="Select service";
+    document.getElementById("serviceSummary").textContent=service+" — choose service";
+    updateSummary();
+    return;
+  }
+  updateSummary();
+});
+document.getElementById("link").addEventListener("input",updateSummary);
+document.getElementById("quantity").addEventListener("input",updateSummary);
+
+function placeOrder(){
+  alert("The design is ready. Supplier, wallet and secure order processing will be connected in the next steps.");
+}
+</script>
+</body>
+</html>
